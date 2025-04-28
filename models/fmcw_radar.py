@@ -39,9 +39,9 @@ class FMCWRadar:
         return received
 
 
-    def mix_signals(self, tx, rx):
+    def mix_signals(self, s_tx, s_rx):
         """Mix transmitted and received signals (simulate mixer output)."""
-        return tx * rx
+        return s_tx * s_rx
 
 
     def intermediate_signal(self):
