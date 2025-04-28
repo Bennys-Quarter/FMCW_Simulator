@@ -1,0 +1,15 @@
+signal_parameters:
+  start_frequency_Hz: 78 .0e9      # Start frequency of the up-chirp (Hz)
+  bandwidth_Hz: 500e6              # Total frequency sweep (Hz)
+  chirp_duration_s: 40e-6          # Duration of a single chirp (seconds)
+  slope_Hz_per_s: 100              # Chirp slope (MHz/µs)
+  sampling_rate_Hz: 10e6           # ADC sampling rate (Hz)
+  num_samples: 512                 # Number of ADC samples per chirp
+  num_chirps: 512                  # Number of chirps per frame
+  tx_power_dBm: 15                 # Transmit power (dBm)
+  waveform_type: "up-chirp"        # Chirp direction
+
+units:
+  frequency: "Hz"
+  time: "seconds"
+  power: "dBm"
