@@ -11,7 +11,7 @@ mimo_array:
     count: 4
     spacing_m: 0.5
     layout: "linear"
-    origin: [0.0, 0.03, 0.0]  # Offset from TX in y-direction
+    origin: [0.0, 0.75, 0.0]  # Offset from TX in y-direction
     orientation: [0.0, 0.0, 0.0]
 
   frequency:
