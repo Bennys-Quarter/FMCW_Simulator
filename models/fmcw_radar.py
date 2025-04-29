@@ -70,3 +70,39 @@ class FMCWRadar:
         intermediate = np.cos(2 * np.pi * (self.f_start * tau + self.k * tau * self.t
                                            - self.k * tau * (r / self.c )))
 
+
+    def plot_transmit_chirp(self):
+        """ Plot the frequency domain up chirp signal"""
+        t_1 = self.t_pre + self.t_c
+        t_2 = self.t_c+self.t_pre+self.t_fly
+        t_3 = self.t_c+self.t_pre+self.t_fly+self.t_wait
+
+        n_0 = np.linspace(0, self.t_pre, int(self.t_pre/(1/self.f_s)))
+        n_1 = np.linspace(self.t_pre, t_1, int(self.t_c / (1 / self.f_s)))
+        n_2 = np.linspace(t_1, t_2, int(self.t_fly / (1 / self.f_s)))
+        n_3 = np.linspace(t_2, t_3, int(self.t_wait / (1 / self.f_s)))
+
+        f_up = lambda n : self.k * n + self.f_start
+        f_down = lambda n, d : -((self.f_BW + (self.k * self.t_pre)) / self.t_fly) * n  + d + self.f_start
+        f_wait = np.ones(len(n_3)) * self.f_start
+
+        plt.figure(figsize=(10,5))
+        plt.title('FMCW Radar Signal in Frequency Domain')
+        plt.plot(n_0*1e6, f_up(n_0)*1e-6, '--', color="gray")
+        plt.plot(n_1*1e6, f_up(n_1)*1e-6, color="red")
+        d_2 = t_1 * (self.k + ((self.f_BW + (self.k * self.t_pre)) / self.t_fly) )
+        plt.plot(n_2*1e6, f_down(n_2, d_2)*1e-6, '--', color="gray")
+        plt.plot(n_3*1e6, f_wait*1e-6, '--', color="gray")
+        plt.xlabel('Time (μs)')
+        plt.ylabel('Frequency (MHz)')
+
+        sections = ['Prepayload', 'Payload', 'Flyback', 'Wait']
+        section_ends = [self.t_pre*1e6, t_1*1e6, t_2*1e6, t_3*1e6]
+        for i, label in enumerate(sections):
+            plt.axvline(section_ends[i], color='gray', linestyle='--', linewidth=0.8)
+            x_text = section_ends[i - 1] + (section_ends[i] - section_ends[i - 1]) / 2 if i > 0 else section_ends[i] / 2
+            plt.text(x_text, self.f_start * 1e-6 + (self.k * t_1) * 1e-6, label, ha='center', va='bottom')
+
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()

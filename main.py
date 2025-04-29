@@ -19,4 +19,5 @@ if __name__ == '__main__':
     with open("input/signal_parameters.yaml", "r") as file:
         config_dict = yaml.load(file, Loader=loader)
 
-
+    radar = FMCWRadar(config_dict)
+    radar.plot_transmit_chirp()
