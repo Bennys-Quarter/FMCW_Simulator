@@ -1,0 +1,21 @@
+mimo_array:
+  description: "4x4 Uniform Linear MIMO array"
+  tx_elements:
+    count: 4
+    spacing_m: 0.5  # lamda element spacing
+    layout: "linear"  # Options: linear, planar, custom
+    origin: [0.0, 0.0, 0.0]
+    orientation: [0.0, 0.0, 0.0]  # Euler angles in degrees
+
+  rx_elements:
+    count: 4
+    spacing_m: 0.5
+    layout: "linear"
+    origin: [0.0, 0.75, 0.0]  # Offset from TX in y-direction
+    orientation: [0.0, 0.0, 0.0]
+
+  frequency:
+    center_hz: 77e9
+    wavelength_m: 0.003896  # Optional, otherwise computed
+
+  notes: "Total virtual array size = tx_count x rx_count = 16 channels"

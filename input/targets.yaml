@@ -1,0 +1,43 @@
+targets:
+  - id: 1
+    name: "Car"
+    rcs_dBsm: 10           # Radar Cross Section in dBsm
+    range_m: 120.0         # Range to the target in meters
+    velocity_mps: 25.0     # Relative velocity in m/s
+    az_deg: 15.0           # Azimuth angle in degrees
+    el_deg: 0              # Elevation angle in degrees
+    type: "vehicle"
+
+  - id: 2
+    name: "Pedestrian"
+    rcs_dBsm: -11
+    range_m: 80.0
+    velocity_mps: 1.2
+    az_deg: -10.0
+    el_deg: 0
+    type: "human"
+
+  - id: 3
+    name: "Truck"
+    rcs_dBsm: 15
+    range_m: 200.0
+    velocity_mps: 22.0
+    az_deg: 5.0
+    el_deg: 0
+    type: "vehicle"
+
+  - id: 4
+    name: "Drone"
+    rcs_dBsm: -15
+    range_m: 150.0
+    velocity_mps: -5.0     # Approaching the radar
+    az_deg: 45.0
+    el_deg: 0
+    type: "aerial"
+
+# General parameters for all targets
+units:
+  rcs: "dBsm"
+  range: "meters"
+  velocity: "meters_per_second"
+  angle: "degrees"
