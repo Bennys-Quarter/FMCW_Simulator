@@ -1,9 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import Optional, Optional, List
 from numpy.typing import NDArray 
-from typing import Union
-from scipy.signal import convolve, argrelextrema
 from scipy.signal.windows import chebwin
 from scipy.fft import fft, fftshift
 
@@ -13,7 +10,7 @@ from scipy.fft import fft, fftshift
 # 2.: Doppler FFT -> RD - map
 
 
-class SimpleSignalProcessor():
+class FMCWSignalProcessor():
     """
     Radar signal processor to detect targets in a range doppler map and generate a point cloud
 
@@ -24,20 +21,29 @@ class SimpleSignalProcessor():
         self.n_ramps: int = None
 
         # Data
+        self.data = None
         self.r_fft: NDArray = None
-        self.r_fft_nci : NDArray = None
-        self.d_fft: NDArray = None
-        self.rdm = None
-
+        self.RD_map: NDArray = None
+        
+        # Target List Parameters
         self.target_list = {
             "peak_power_dB": [],
             "idx": [],
         }
 
         # CA_CFAR parameters
-        self.training_cells = 3
-        self.guard_cells = 3
-        self.cfar_th = 3
+        self.ca_cfar = {
+            "training_cells" : 3,
+            "guard_cells" : 3,
+            "cfar_th" : 3
+        }
+        
+        # Signal Processing Chain
+        self.pro_chain = {
+            0: [],      
+            1: [self.range_fft],
+            2: [self.range_fft, self.doppler_fft]
+        }
 
 
     def set_data_cube_shape(self, n_sample, n_ramps, n_spatial = 0):
@@ -51,42 +57,45 @@ class SimpleSignalProcessor():
         return data_frame.reshape(self.n_ramps, self.n_sample)
 
 
-    def range_fft(self, data:NDArray):
+    def range_fft(self):
         """ Performs range fft """
-        data_fft = np.zeros(np.shape(data), dtype=complex)
+        data_fft = np.zeros(np.shape(self.data), dtype=complex)
         w = chebwin(self.n_sample, at = 100)
-        data = data * w
+        self.data = self.data * w
         for i in range(self.n_sample):
-            data_fft[i] = fft(data[i] , self.n_sample) / (np.sum(w))
-        return data_fft[:, :data.shape[1]//2]
+            data_fft[i] = fft(self.data[i] , self.n_sample) / (np.sum(w))
+        self.r_fft = data_fft[:, :self.data.shape[1]]
+        return self.r_fft
     
 
-    def doppler_fft(self, data:NDArray):
+    def doppler_fft(self):
         """ Perform doppler fft """
-        data_fft = np.zeros((data.shape[1], data.shape[0]), dtype=complex)
+        data_fft = np.zeros((self.data.shape[1], self.data.shape[0]), dtype=complex)
         w = chebwin(self.n_ramps , at = 100)
-        data = data.transpose() * w
+        r_fft = self.r_fft.transpose() * w
 
-        for i in range(self.n_sample//2):
-            re = fft(data[i], self.n_ramps)
+        for i in range(self.n_sample):
+            re = fft(r_fft[i], self.n_ramps)
             data_fft[i] = fftshift(re) / (np.sum(w))
-
-        return data_fft
- 
-
-    def process_frame(self, raw_data, type="two_sided"):
-        """ Execute the Signal Processing Chain """
-        data = self.frame2cube(raw_data)
         
-        # Range FFT
-        self.r_fft = self.range_fft(data)
-
-        # Dopper FFT
-        self.d_fft = self.doppler_fft(self.r_fft) #, axes=0
-
         # Range Doppler Map generation in dBFS
-        self.rdm = 10*np.log10(np.abs(self.d_fft)**2)
+        self.RD_map = data_fft
+        return self.RD_map
+
+
+    def process_frame(self, raw_data, case=2):
+        """ Execute the Signal Processing Chain 
         
+            cases:
+                0: Do nothing
+                1: Range FFT
+                2: Range FFT + Doppler FFT -> RangeDoppler Map
+        """
+        self.data = self.frame2cube(raw_data)
+        
+        for func in self.pro_chain[case]:
+            func()
+   
         # 1D NCI Range Peak detection
         # = np.mean(10*np.log10(np.abs(self.r_fft)**2), axis=0) 
         #self.cfar = self.ca_cfar_1d(r_fft_nci , guard_cells=3, training_cells=3)
@@ -96,73 +105,72 @@ class SimpleSignalProcessor():
         # cfar_2d = self.ca_cfar_2d(self.rdm)
         #self.identify_targets(self.rdm, cfar_2d)
          
-        return self.d_fft
     
 
-    def identify_targets(self, data: NDArray, threshold:NDArray):
-        """
-        Returns a dictionary of all found peaks in an array of target canditates
-        """
+    # def identify_targets(self, data: NDArray, threshold:NDArray):
+    #     """
+    #     Returns a dictionary of all found peaks in an array of target canditates
+    #     """
 
-        mask = data > threshold  
-        target_candidates = 10 ** (data/10)
-        target_candidates = target_candidates * mask
+    #     mask = data > threshold  
+    #     target_candidates = 10 ** (data/10)
+    #     target_candidates = target_candidates * mask
 
-        #index_target = argrelmax(target_candidates)
+    #     #index_target = argrelmax(target_candidates)
 
-        #filtered = maximum_filter(target_candidates, size=target_candidates.size, mode='constant')
-        #local_maxima = argrelextrema(target_candidates, np.)
+    #     #filtered = maximum_filter(target_candidates, size=target_candidates.size, mode='constant')
+    #     #local_maxima = argrelextrema(target_candidates, np.)
 
-        # Get indices of local maxima
-        local_max_indices = np.argwhere(local_maxima)
-        print("Local Maxima Indices:", local_max_indices)
+    #     # Get indices of local maxima
+    #     local_max_indices = np.argwhere(local_maxima)
+    #     print("Local Maxima Indices:", local_max_indices)
 
-        for i in index_target:
-            self.target_list["idx"] = i
-            self.target_list["peak_power_dB"] = 10*np.log10(target_candidates[i])
+    #     for i in index_target:
+    #         self.target_list["idx"] = i
+    #         self.target_list["peak_power_dB"] = 10*np.log10(target_candidates[i])
 
     
-    def ca_cfar_2d(self, rdm:NDArray ):
-        """
-        2D Target detector: Cell Averaging Constant False Alarm Rate
-        """
-        N_rdm = rdm.size
-        cfar_2d = np.zeros(np.shape(rdm)) 
+    # def ca_cfar_2d(self, rdm:NDArray ):
+    #     """
+    #     2D Target detector: Cell Averaging Constant False Alarm Rate
+    #     """
+    #     N_rdm = rdm.size
+    #     cfar_2d = np.zeros(np.shape(rdm)) 
 
-        for col in range(rdm.shape[1]):
-            cfar_2d[:, col] = self.ca_cfar_1d(rdm[:, col]) 
+    #     for col in range(rdm.shape[1]):
+    #         cfar_2d[:, col] = self.ca_cfar_1d(rdm[:, col]) 
 
-        return cfar_2d
+    #     return cfar_2d
 
 
-    def ca_cfar_1d(self, data, guard_cells: int = 3, training_cells: int = 3, th: float = 3):
-        """
-        1D Target detector: Cell Averaging Constant False Alarm Rate
-        """
-        N_rdm = data.size
-        cfar = np.zeros(np.shape(data))
+    # def ca_cfar_1d(self, data, guard_cells: int = 3, training_cells: int = 3, th: float = 3):
+    #     """
+    #     1D Target detector: Cell Averaging Constant False Alarm Rate
+    #     """
+    #     N_rdm = data.size
+    #     cfar = np.zeros(np.shape(data))
 
-        cell_boundry = guard_cells + training_cells
+    #     cell_boundry = guard_cells + training_cells
 
-        for i_cut in range(cell_boundry, N_rdm - cell_boundry):
+    #     for i_cut in range(cell_boundry, N_rdm - cell_boundry):
 
-            idx_min_train = i_cut - cell_boundry
-            idx_max_train = i_cut + cell_boundry
-            idx_min_guard = i_cut - training_cells
-            idx_max_guard = i_cut + training_cells
+    #         idx_min_train = i_cut - cell_boundry
+    #         idx_max_train = i_cut + cell_boundry
+    #         idx_min_guard = i_cut - training_cells
+    #         idx_max_guard = i_cut + training_cells
 
-            train_area = np.concatenate([data[idx_min_train:idx_min_guard], 
-                                         data[idx_max_guard:idx_max_train]]) 
+    #         train_area = np.concatenate([data[idx_min_train:idx_min_guard], 
+    #                                      data[idx_max_guard:idx_max_train]]) 
 
-            ca = np.mean(train_area)
-            cfar[i_cut] = ca
+    #         ca = np.mean(train_area)
+    #         cfar[i_cut] = ca
 
-        cfar[0:cell_boundry] = np.median(cfar)
-        cfar[-cell_boundry:] = np.median(cfar)
+    #     cfar[0:cell_boundry] = np.median(cfar)
+    #     cfar[-cell_boundry:] = np.median(cfar)
 
-        cfar = cfar + th
+    #     cfar = cfar + th
 
-        return cfar   
+    #     return cfar   
 
     
     def plot_range_fft(self, option: str = "default"):
@@ -176,6 +184,10 @@ class SimpleSignalProcessor():
         plt.figure()
 
         N = min(self.n_sample//2, np.shape(self.r_fft)[0])
+        
+        plt.title(" Range FFT ")
+        plt.xlabel(" Number of Samples ")
+        plt.ylabel("Amplitude in dBFS ")
 
         if option == "cfar":
             for i in range(N):
@@ -207,13 +219,8 @@ class SimpleSignalProcessor():
         else:
             for i in range(N):
                 plt.plot(10*np.log10(np.abs(self.r_fft[i])**2))
-
-        print(np.mean(10*np.log10(np.abs(self.r_fft[i])**2)))        
-        plt.show()
-
-        plt.title(" Range FFT ")
-        plt.xlabel(" Number of Samples ")
-        plt.ylabel("Amplitude in dBFS ")
+      
+            plt.show()
 
 
     def plot_doppler_fft(self):
@@ -221,13 +228,15 @@ class SimpleSignalProcessor():
         Plot the doppler fft 
         """
         plt.figure()
-        for i in range(self.n_ramps):
-            plt.plot(10*np.log10(np.abs(self.d_fft[i])**2))
-        plt.show()
-
+        
         plt.title(" Doppler FFT ")
         plt.xlabel(" Number of Ramps ")
         plt.ylabel("Amplitude in dBFS ")
+
+        for i in range(self.n_ramps):
+            plt.plot(10*np.log10(np.abs(self.RD_map[i])**2))
+        plt.show()
+
 
 
     def plot_RD_map(self, rdm=None, disp="2D"):
@@ -238,7 +247,8 @@ class SimpleSignalProcessor():
             option is either "2D" or "3D"
         """
         if rdm is None:
-            rdm = self.rdm
+            rdm = self.RD_map[:self.n_sample//2, :]
+            rdm = 10*np.log10(np.abs(rdm)**2)
 
         doppler_axis = np.arange(-self.n_ramps//2 , self.n_ramps//2, 1) 
         range_axis = np.arange(0, self.n_sample//2 , 1) 

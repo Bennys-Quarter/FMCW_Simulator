@@ -45,11 +45,11 @@ class FMCWRadar:
         # Static system parameters
         self.c = constants.speed_of_light 
         self.k_b = constants.Boltzmann
-        self.G = 10 ** (0 / 10)        # LNA and antenna gain in dB
+        self.G = 10 ** (0 / 10)         # LNA and antenna gain in dB
         self.F_r = 10 ** (13 / 10)      # Noise factor
         self.L = 10 ** (10 / 10)        # Environment Losses
         self.T_n = 290                  # Thermal nois in °Kelvin
-        self.N_0 = self.f_s / 2         # Noise bandwidth
+
 
         # Performance parameter
         self.R_max = self.c/(2*self.f_BW)
@@ -113,21 +113,21 @@ class FMCWRadar:
         t_next = self.t_pri - self.t_c
         r = r + v * t 
         tau = 2 * r / self.c  # Round-trip delay 
-        intermediate = 0*np.cos(2 * np.pi * (self.f_start * tau + self.k * tau * (t%(self.t_c + t_next))
+        s_if = np.cos(2 * np.pi * (self.f_start * tau + self.k * tau * (t%(self.t_c + t_next))
                                            - self.k * tau * (r / self.c ))) 
-        return intermediate
+        return s_if
     
 
-    def addaptive_noise(self, Num_s, type="Gaussian",):
+    def aditive_noise(self, w_fun=""):
         """
-        Adaptive noise distribution function
-        Takes the thermal noise and the system gain into account
+        Aditive Johnson–Nyquist noise model
         """
-        #N_i = self.T_n * self.F_r * self.k_b * self.N_0    # Input Noise
-        N_a = self.T_n * self.k_b * 762.9395 #(self.F_r - 1) * N_i * self.G                # Output Noise
         
-        return np.random.normal(0, np.sqrt(N_a*2), Num_s)
-    
+        sigma = self.k_b * self.T_n * self.f_s
+        sigma_sample = np.sqrt(sigma)
+        
+        return np.random.normal(0, sigma_sample, self.n_sample)
+        
 
     def get_radar_scan(self):
         """ 
@@ -147,8 +147,7 @@ class FMCWRadar:
             for i in range(self.n_ramps):
                 t_chirp = np.linspace(0, self.t_c, self.n_sample) + i * self.t_pri
 
-                # S_if = S_Tx_LO * S_Rx
-                chirp_response = self.intermediate_signal(t_chirp, r, v) + self.addaptive_noise(self.n_sample)
+                chirp_response = self.intermediate_signal(t_chirp, r, v) + self.aditive_noise()
                 object_baseband_response[self.n_sample * i : self.n_sample + self.n_sample * i] = chirp_response[:]
 
             # Superposition of all object S_if response signals
