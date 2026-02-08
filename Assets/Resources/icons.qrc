@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="pedestrian_icon">
+    <file>pedestrian_icon.png</file>
+  </qresource>
+  <qresource prefix="truck_icon">
+    <file>truck_icon.png</file>
+  </qresource>
+  <qresource prefix="drone_icon">
+    <file>drone_icon.png</file>
+  </qresource>
+</RCC>
