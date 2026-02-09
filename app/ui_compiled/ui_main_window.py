@@ -17,13 +17,16 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QGraphicsView, QGridLayout,
-    QGroupBox, QHBoxLayout, QLabel, QLineEdit,
-    QMainWindow, QMenu, QMenuBar, QPushButton,
-    QScrollArea, QSizePolicy, QSpacerItem, QStatusBar,
-    QTabWidget, QVBoxLayout, QWidget)
+    QHBoxLayout, QLabel, QLineEdit, QMainWindow,
+    QMenu, QMenuBar, QPushButton, QScrollArea,
+    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
+    QVBoxLayout, QWidget)
 
-from app import icons_rc
-
+from app.widgets.box_drone import BoxDrone
+from app.widgets.box_pedestrian import BoxPedestrian
+from app.widgets.box_truck import BoxTruck
+from app.resources import icons_rc
+from app.resources import icons_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -65,119 +68,6 @@ class Ui_MainWindow(object):
         self.tabWidget.setGeometry(QRect(6, 0, 351, 661))
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
-        self.scrollArea = QScrollArea(self.tab_2)
-        self.scrollArea.setObjectName(u"scrollArea")
-        self.scrollArea.setGeometry(QRect(9, 319, 331, 301))
-        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollAreaWidgetContents = QWidget()
-        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 329, 299))
-        self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.groupBox_3 = QGroupBox(self.scrollAreaWidgetContents)
-        self.groupBox_3.setObjectName(u"groupBox_3")
-        self.verticalLayout_5 = QVBoxLayout(self.groupBox_3)
-        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.pedestrian_layout = QHBoxLayout()
-        self.pedestrian_layout.setObjectName(u"pedestrian_layout")
-        self.label_26 = QLabel(self.groupBox_3)
-        self.label_26.setObjectName(u"label_26")
-        self.label_26.setMaximumSize(QSize(60, 60))
-        self.label_26.setPixmap(QPixmap(u":/pedestrian_icon/pedestrian_icon.png"))
-        self.label_26.setScaledContents(True)
-
-        self.pedestrian_layout.addWidget(self.label_26)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.pedestrian_layout.addItem(self.horizontalSpacer)
-
-        self.label_21 = QLabel(self.groupBox_3)
-        self.label_21.setObjectName(u"label_21")
-
-        self.pedestrian_layout.addWidget(self.label_21)
-
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.pedestrian_layout.addItem(self.horizontalSpacer_2)
-
-
-        self.verticalLayout_5.addLayout(self.pedestrian_layout)
-
-
-        self.verticalLayout_4.addWidget(self.groupBox_3)
-
-        self.groupBox_4 = QGroupBox(self.scrollAreaWidgetContents)
-        self.groupBox_4.setObjectName(u"groupBox_4")
-        self.verticalLayout_6 = QVBoxLayout(self.groupBox_4)
-        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.horizontalLayout_6 = QHBoxLayout()
-        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.label_24 = QLabel(self.groupBox_4)
-        self.label_24.setObjectName(u"label_24")
-        self.label_24.setEnabled(True)
-        self.label_24.setMaximumSize(QSize(60, 60))
-        self.label_24.setAutoFillBackground(False)
-        self.label_24.setPixmap(QPixmap(u":/drone_icon/drone_icon.png"))
-        self.label_24.setScaledContents(True)
-        self.label_24.setWordWrap(False)
-
-        self.horizontalLayout_6.addWidget(self.label_24)
-
-        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_6.addItem(self.horizontalSpacer_5)
-
-        self.label_23 = QLabel(self.groupBox_4)
-        self.label_23.setObjectName(u"label_23")
-
-        self.horizontalLayout_6.addWidget(self.label_23)
-
-        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_6.addItem(self.horizontalSpacer_6)
-
-
-        self.verticalLayout_6.addLayout(self.horizontalLayout_6)
-
-
-        self.verticalLayout_4.addWidget(self.groupBox_4)
-
-        self.groupBox_31 = QGroupBox(self.scrollAreaWidgetContents)
-        self.groupBox_31.setObjectName(u"groupBox_31")
-        self.verticalLayout_7 = QVBoxLayout(self.groupBox_31)
-        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.label_25 = QLabel(self.groupBox_31)
-        self.label_25.setObjectName(u"label_25")
-        self.label_25.setMaximumSize(QSize(80, 60))
-        self.label_25.setPixmap(QPixmap(u":/truck_icon/truck_icon.png"))
-        self.label_25.setScaledContents(True)
-
-        self.horizontalLayout_4.addWidget(self.label_25)
-
-        self.horizontalSpacer_3 = QSpacerItem(20, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_4.addItem(self.horizontalSpacer_3)
-
-        self.label_22 = QLabel(self.groupBox_31)
-        self.label_22.setObjectName(u"label_22")
-
-        self.horizontalLayout_4.addWidget(self.label_22)
-
-        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_4.addItem(self.horizontalSpacer_4)
-
-
-        self.verticalLayout_7.addLayout(self.horizontalLayout_4)
-
-
-        self.verticalLayout_4.addWidget(self.groupBox_31)
-
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.scrollArea_2 = QScrollArea(self.tab_2)
         self.scrollArea_2.setObjectName(u"scrollArea_2")
         self.scrollArea_2.setGeometry(QRect(9, 9, 331, 301))
@@ -193,6 +83,32 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addItem(self.verticalSpacer, 0, 0, 1, 1)
 
         self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
+        self.scrollArea = QScrollArea(self.tab_2)
+        self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setGeometry(QRect(10, 320, 331, 301))
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 329, 299))
+        self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.Box_Pedestrian = BoxPedestrian(self.scrollAreaWidgetContents)
+        self.Box_Pedestrian.setObjectName(u"Box_Pedestrian")
+
+        self.verticalLayout_4.addWidget(self.Box_Pedestrian)
+
+        self.Box_Drone = BoxDrone(self.scrollAreaWidgetContents)
+        self.Box_Drone.setObjectName(u"Box_Drone")
+
+        self.verticalLayout_4.addWidget(self.Box_Drone)
+
+        self.Box_Truck = BoxTruck(self.scrollAreaWidgetContents)
+        self.Box_Truck.setObjectName(u"Box_Truck")
+
+        self.verticalLayout_4.addWidget(self.Box_Truck)
+
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.tabWidget.addTab(self.tab_2, "")
         self.tab = QWidget()
         self.tab.setObjectName(u"tab")
@@ -408,12 +324,6 @@ class Ui_MainWindow(object):
         self.actionReset.setText(QCoreApplication.translate("MainWindow", u"Reset Settings", None))
         self.actionImport.setText(QCoreApplication.translate("MainWindow", u"Import", None))
         self.actionExport.setText(QCoreApplication.translate("MainWindow", u"Export", None))
-        self.label_26.setText("")
-        self.label_21.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Pedestrian</p></body></html>", None))
-        self.label_24.setText("")
-        self.label_23.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Drone</p></body></html>", None))
-        self.label_25.setText("")
-        self.label_22.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Truck</p></body></html>", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Target - List", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Apply && Save", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Show", None))

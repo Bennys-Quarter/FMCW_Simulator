@@ -7,25 +7,15 @@ from models.fmcw_radar import FMCWRadar
 from processing.fmcw_processing import FMCWSignalProcessor
 from file_handler import FileHandler
 
-from PySide6.QtWidgets import QApplication, QMainWindow
-from app.main_window import Ui_MainWindow
-
-
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
-
-        self.setFixedSize(1280, 720)
-        self.setWindowTitle("FMCW Simulator")
+import sys
+from PySide6.QtWidgets import QApplication
+from app.windows.main_window import MainWindow  # your wrapper class
 
 
 def app():
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-    sys.exit(app.exec())
     sys.exit(app.exec())
 
 
