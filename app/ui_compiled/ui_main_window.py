@@ -25,6 +25,7 @@ from PySide6.QtWidgets import (QApplication, QFrame, QGraphicsView, QGridLayout,
 from app.widgets.box_drone import BoxDrone
 from app.widgets.box_pedestrian import BoxPedestrian
 from app.widgets.box_truck import BoxTruck
+from app.widgets.target_list import TargetList
 from app.resources import icons_rc
 from app.resources import icons_rc
 
@@ -68,11 +69,11 @@ class Ui_MainWindow(object):
         self.tabWidget.setGeometry(QRect(6, 0, 351, 661))
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
-        self.scrollArea_2 = QScrollArea(self.tab_2)
-        self.scrollArea_2.setObjectName(u"scrollArea_2")
-        self.scrollArea_2.setGeometry(QRect(9, 9, 331, 301))
-        self.scrollArea_2.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scrollArea_2.setWidgetResizable(True)
+        self.TargetList = TargetList(self.tab_2)
+        self.TargetList.setObjectName(u"TargetList")
+        self.TargetList.setGeometry(QRect(9, 9, 331, 301))
+        self.TargetList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.TargetList.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
         self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 329, 299))
@@ -82,7 +83,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addItem(self.verticalSpacer, 0, 0, 1, 1)
 
-        self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
+        self.TargetList.setWidget(self.scrollAreaWidgetContents_2)
         self.scrollArea = QScrollArea(self.tab_2)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setGeometry(QRect(10, 320, 331, 301))

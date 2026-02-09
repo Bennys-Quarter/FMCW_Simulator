@@ -78,7 +78,7 @@
        <attribute name="title">
         <string>Target - List</string>
        </attribute>
-       <widget class="QScrollArea" name="scrollArea_2">
+       <widget class="TargetList" name="TargetList">
         <property name="geometry">
          <rect>
           <x>9</x>
@@ -463,6 +463,12 @@
    <class>BoxTruck</class>
    <extends>QGroupBox</extends>
    <header>app.widgets.box_truck</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TargetList</class>
+   <extends>QScrollArea</extends>
+   <header>app.widgets.target_list</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

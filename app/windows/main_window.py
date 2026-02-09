@@ -14,4 +14,6 @@ class MainWindow(QMainWindow):
         self.setFixedSize(1280, 720)
         self.setWindowTitle("FMCW Simulator")
         
+        self.setAcceptDrops(True)
+        
         
