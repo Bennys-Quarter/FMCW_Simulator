@@ -18,7 +18,6 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QGroupBox, QHBoxLayout, QLabel,
     QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 from app.resources import icons_rc
-from app.resources import icons_rc
 
 class Ui_BoxPedestrian(object):
     def setupUi(self, BoxPedestrian):

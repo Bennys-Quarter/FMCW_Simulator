@@ -9,4 +9,3 @@ class BoxDrone(DraggableMixin, QGroupBox):
         self.ui = Ui_Box_Drone()
         self.ui.setupUi(self)
         
-        self.enable_drag()

@@ -8,4 +8,3 @@ class BoxTruck(DraggableMixin, QGroupBox):
         self.ui = Ui_BoxTruck()
         self.ui.setupUi(self)
         
-        self.enable_drag()

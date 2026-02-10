@@ -77,7 +77,6 @@
  </widget>
  <resources>
   <include location="../../Assets/Resources/icons.qrc"/>
-  <include location="../../../../../../Assets/Resources/icons.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -10,6 +10,5 @@ class BoxPedestrian(DraggableMixin, QGroupBox):
         self.ui = Ui_BoxPedestrian()
         self.ui.setupUi(self)
         
-        self.enable_drag()
         
 

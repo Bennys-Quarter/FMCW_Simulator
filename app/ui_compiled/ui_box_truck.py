@@ -18,7 +18,6 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QGroupBox, QHBoxLayout, QLabel,
     QSizePolicy, QSpacerItem, QWidget)
 from app.resources import icons_rc
-from app.resources import icons_rc
 
 class Ui_BoxTruck(object):
     def setupUi(self, BoxTruck):
