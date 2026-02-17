@@ -16,15 +16,16 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QGraphicsView, QGridLayout,
-    QHBoxLayout, QLabel, QLineEdit, QMainWindow,
-    QMenu, QMenuBar, QPushButton, QScrollArea,
-    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
+    QLabel, QLineEdit, QMainWindow, QMenu,
+    QMenuBar, QPushButton, QScrollArea, QSizePolicy,
+    QSpacerItem, QStatusBar, QTabWidget, QVBoxLayout,
+    QWidget)
 
 from app.widgets.box_drone import BoxDrone
 from app.widgets.box_pedestrian import BoxPedestrian
 from app.widgets.box_truck import BoxTruck
+from app.widgets.plot_widget import PlotWidget
 from app.widgets.target_list import TargetList
 from app.resources import icons_rc
 from app.resources import icons_rc
@@ -64,7 +65,7 @@ class Ui_MainWindow(object):
         self.frame_2.setFrameShape(QFrame.NoFrame)
         self.tabWidget = QTabWidget(self.frame_2)
         self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setGeometry(QRect(6, 0, 351, 661))
+        self.tabWidget.setGeometry(QRect(6, 10, 351, 651))
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
         self.scrollArea = QScrollArea(self.tab_2)
@@ -103,7 +104,7 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 331, 299))
         self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
@@ -279,13 +280,26 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.label_14, 1, 2, 1, 1)
 
         self.tabWidget.addTab(self.tab, "")
-        self.graphicsView = QGraphicsView(self.frame)
-        self.graphicsView.setObjectName(u"graphicsView")
-        self.graphicsView.setGeometry(QRect(370, 10, 871, 641))
+        self.plot_frame = QFrame(self.frame)
+        self.plot_frame.setObjectName(u"plot_frame")
+        self.plot_frame.setGeometry(QRect(359, 9, 891, 651))
+        self.plot_frame.setFrameShape(QFrame.StyledPanel)
+        self.plot_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayoutWidget = QWidget(self.plot_frame)
+        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
+        self.verticalLayoutWidget.setGeometry(QRect(10, 10, 861, 631))
+        self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.plotWidget = PlotWidget(self.verticalLayoutWidget)
+        self.plotWidget.setObjectName(u"plotWidget")
+
+        self.verticalLayout_2.addWidget(self.plotWidget)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1270, 23))
+        self.menubar.setGeometry(QRect(0, 0, 1270, 22))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuRun = QMenu(self.menubar)
@@ -311,7 +325,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)

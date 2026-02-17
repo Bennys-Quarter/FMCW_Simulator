@@ -171,45 +171,51 @@ class FMCWRadar:
         f_down = lambda n, d : -((self.f_BW + (self.k * self.t_pre)) / self.t_fly) * n  + d + self.f_start
         f_wait = np.ones(len(n_3)) * self.f_start
 
-        plt.figure(figsize=(10,5))
-        plt.title('FMCW Radar Signal in Frequency Domain')
-        plt.plot(n_0*1e6, f_up(n_0)*1e-6, '--', color="gray")
-        plt.plot(n_1*1e6, f_up(n_1)*1e-6, color="red")
+        fig = plt.figure(figsize=(10,5))
+        ax = fig.add_subplot()
+        ax.set_title('FMCW Radar Signal in Frequency Domain')
+        ax.plot(n_0*1e6, f_up(n_0)*1e-6, '--', color="gray")
+        ax.plot(n_1*1e6, f_up(n_1)*1e-6, color="red")
         d_2 = t_1 * (self.k + ((self.f_BW + (self.k * self.t_pre)) / self.t_fly) )
-        plt.plot(n_2*1e6, f_down(n_2, d_2)*1e-6, '--', color="gray")
-        plt.plot(n_3*1e6, f_wait*1e-6, '--', color="gray")
-        plt.xlabel('Time (μs)')
-        plt.ylabel('Frequency (MHz)')
+        ax.plot(n_2*1e6, f_down(n_2, d_2)*1e-6, '--', color="gray")
+        ax.plot(n_3*1e6, f_wait*1e-6, '--', color="gray")
+        ax.set_xlabel('Time (μs)')
+        ax.set_ylabel('Frequency (MHz)')
 
         sections = ['Prepayload', 'Payload', 'Flyback', 'Wait']
         section_ends = [self.t_pre*1e6, t_1*1e6, t_2*1e6, t_3*1e6]
         for i, label in enumerate(sections):
-            plt.axvline(section_ends[i], color='gray', linestyle='--', linewidth=0.8)
+            ax.axvline(section_ends[i], color='gray', linestyle='--', linewidth=0.8)
             x_text = section_ends[i - 1] + (section_ends[i] - section_ends[i - 1]) / 2 if i > 0 else section_ends[i] / 2
-            plt.text(x_text, self.f_start * 1e-6 + (self.k * t_1) * 1e-6, label, ha='center', va='bottom')
+            ax.text(x_text, self.f_start * 1e-6 + (self.k * t_1) * 1e-6, label, ha='center', va='bottom')
 
-        plt.grid(True)
-        plt.tight_layout()
-        plt.show()
+        ax.grid(True)
+        ax.set_in_layout(False)
+        
+        return fig
 
 
     def plot_raw_data(self, raw_data):
         """ Plot the time data sample values of all chirps"""
 
-        plt.figure(1)
+        fig1 = plt.figure(1)
+        ax1 = fig1.add_subplot()
+        
         for i in range(4):
-            plt.plot(self.t[self.n_sample * i : self.n_sample + self.n_sample * i]*1e6, 
+            ax1.plot(self.t[self.n_sample * i : self.n_sample + self.n_sample * i]*1e6, 
                      raw_data[self.n_sample * i : self.n_sample + self.n_sample * i])
         
-        plt.title("Time domain intermediate signal of first four chirps")
-        plt.xlabel('Time (μs)')
-        plt.ylabel('Amplitude')
+        ax1.set_title("Time domain intermediate signal of first four chirps")
+        ax1.set_xlabel('Time (μs)')
+        ax1.set_ylabel('Amplitude')
 
-        plt.figure(2)
+        fig2 = plt.figure(2)
+        ax2 = fig2.add_subplot()
+        
         for i in range(self.n_ramps):
-            plt.plot(raw_data[self.n_sample * i : self.n_sample + self.n_sample * i])
+            ax2.plot(raw_data[self.n_sample * i : self.n_sample + self.n_sample * i])
 
-        plt.xlabel('Sample')
-        plt.ylabel('Amplitude')
+        ax2.set_xlabel('Sample')
+        ax2.set_ylabel('Amplitude')
 
-        plt.show()
+        return fig1, fig2
