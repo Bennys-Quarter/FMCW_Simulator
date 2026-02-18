@@ -1,0 +1,17 @@
+signal_parameters:
+  f_start: 78.0e9            # Start frequency of the up-chirp (Hz)
+  f_BW: 500e6                 # Total frequency sweep (Hz)
+  f_s: 50e6                   # ADC sampling rate (Hz) (Hz)
+  t_c: 10.24e-6               # Duration of a single chirp (seconds)
+  t_pri: 30.24e-6             # Chirp repetition interval (seconds)
+  t_pre: 2e-6                 # Pre payload time (seconds)
+  t_fly: 8e-6                 # Fly back time (seconds)
+  t_wait: 10e-6               # Wait time (seconds)
+  n_sample: 512               # Number of ADC samples per chirp
+  n_ramps: 512                # Number of chirps per frame
+  waveform_type: "up-chirp"   # Chirp direction
+
+units:
+  frequency: "Hz"
+  time: "seconds"
+  power: "dBm"
