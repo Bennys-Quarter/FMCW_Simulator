@@ -1,5 +1,5 @@
 # main_window.py
-from PySide6.QtWidgets import QMainWindow, QLineEdit, QPushButton, QGraphicsView
+from PySide6.QtWidgets import QMainWindow, QLineEdit, QPushButton, QGraphicsView, QMenu
 from app.ui_compiled.ui_main_window import Ui_MainWindow
 
 from app.core.app_state import AppState
@@ -50,11 +50,12 @@ class MainWindow(QMainWindow):
         
         self.fmcw_apply_btn = self.findChild(QPushButton, "applyAndSaveButton")
         self.fmcw_show_btn = self.findChild(QPushButton, "showButton")
+        self.menu_window = self.findChild(QMenu, "menuPlots")
         self.canvas = self.findChild(PlotWidget, "plotWidget")
         
         self.fmcw_apply_btn.clicked.connect(self.on_apply_clicked)
         self.fmcw_show_btn.clicked.connect(self.on_show_clicked)
-        
+        self.menu_window.triggered.connect(self.on_menu_window_triggered)
         self.state.fmcwSettingsChanged.connect(self.on_chirp_param_changed)
 
     
@@ -71,7 +72,15 @@ class MainWindow(QMainWindow):
         keys = self.state.fmcw_settings.keys()
         for key in keys:
             self.param_settings[key].setText(str(self.state.fmcw_settings[key]))
+            
     
+    def on_menu_window_triggered(self, action):
+        if action.text() == "Run":
+            self.canvas.on_run_triggered()
+        elif action.text() == "Stop":
+            self.canvas.on_stop_triggered()
+    
+        
             
     @staticmethod
     def convert_fmcw_to_ui_units(params: dict) -> dict:

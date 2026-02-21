@@ -22,20 +22,20 @@ def app():
 if __name__ == '__main__':
     #%% Load input parameters 
     
-    f_handler = FileHandler()
-    chirp_param, target_param = f_handler.read_input()
+    #f_handler = FileHandler()
+    #chirp_param, target_param = f_handler.read_input()
 
-    radar = FMCWRadar(chirp_param, target_param)
-    processor = FMCWSignalProcessor()
+    #radar = FMCWRadar(chirp_param, target_param)
+    #processor = FMCWSignalProcessor()
     
-    processor.set_data_cube_shape(radar.n_sample, radar.n_ramps) # 2D plane
+    #processor.set_data_cube_shape(radar.n_sample, radar.n_ramps) # 2D plane
 
 
     #%% Functions
     
-    # raw_data = radar.get_radar_scan()
+    #raw_data = radar.get_radar_scan()
     
-    # processor.process_frame(raw_data, case=2)
+    #processor.process_frame(raw_data, case=2)
     
     # radar.plot_transmit_chirp()
     

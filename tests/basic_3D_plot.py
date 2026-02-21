@@ -37,6 +37,7 @@ class UpdateThread(QThread):
         self.running = False
         self.wait()
 
+
 # Main window
 class MainWindow(QMainWindow):
     def __init__(self):

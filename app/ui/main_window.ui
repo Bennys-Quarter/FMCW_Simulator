@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1270</width>
+    <width>1271</width>
     <height>720</height>
    </rect>
   </property>
@@ -42,7 +42,7 @@
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::NoFrame</enum>
+     <enum>QFrame::Shape::NoFrame</enum>
     </property>
     <widget class="QFrame" name="frame_2">
      <property name="geometry">
@@ -54,7 +54,7 @@
       </rect>
      </property>
      <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+      <enum>QFrame::Shape::NoFrame</enum>
      </property>
      <widget class="QTabWidget" name="tabWidget">
       <property name="geometry">
@@ -66,7 +66,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
@@ -82,7 +82,7 @@
          </rect>
         </property>
         <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarAsNeeded</enum>
+         <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
         </property>
         <property name="widgetResizable">
          <bool>true</bool>
@@ -119,7 +119,7 @@
          </rect>
         </property>
         <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarAsNeeded</enum>
+         <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
         </property>
         <property name="widgetResizable">
          <bool>true</bool>
@@ -137,7 +137,7 @@
           <item>
            <spacer name="verticalSpacer">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Orientation::Vertical</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -165,7 +165,7 @@
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <widget class="QWidget" name="horizontalLayoutWidget">
          <property name="geometry">
@@ -379,10 +379,10 @@
       </rect>
      </property>
      <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+      <enum>QFrame::Shape::StyledPanel</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+      <enum>QFrame::Shadow::Raised</enum>
      </property>
      <widget class="QWidget" name="verticalLayoutWidget">
       <property name="geometry">
@@ -402,12 +402,13 @@
     </widget>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1270</width>
+     <width>1271</width>
      <height>22</height>
     </rect>
    </property>
@@ -423,25 +424,20 @@
    </widget>
    <widget class="QMenu" name="menuRun">
     <property name="title">
-     <string>Run</string>
+     <string>Window</string>
     </property>
-   </widget>
-   <widget class="QMenu" name="menuPause">
-    <property name="title">
-     <string>Pause</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuStop">
-    <property name="title">
-     <string>Stop</string>
-    </property>
+    <widget class="QMenu" name="menuPlots">
+     <property name="title">
+      <string>Plots</string>
+     </property>
+     <addaction name="actionRun"/>
+     <addaction name="actionStop"/>
+    </widget>
+    <addaction name="menuPlots"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuRun"/>
-   <addaction name="menuPause"/>
-   <addaction name="menuStop"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionReset">
    <property name="text">
     <string>Reset Settings</string>
@@ -455,6 +451,16 @@
   <action name="actionExport">
    <property name="text">
     <string>Export</string>
+   </property>
+  </action>
+  <action name="actionRun">
+   <property name="text">
+    <string>Run</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="text">
+    <string>Stop</string>
    </property>
   </action>
  </widget>
