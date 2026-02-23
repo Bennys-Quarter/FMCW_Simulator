@@ -32,18 +32,33 @@ class TargetListEntry(DraggableMixin, QGroupBox):
         self.l_velocity = self.findChild(QLabel, "l_velocity")
         
         self.l_target.setText(l_target)
-        self.l_distance.setText(str(self.d))
-        self.l_velocity.setText(str(self.v))
+        self.update_text()
         
         self.exit_btn.clicked.connect(self.on_exit_clicked)
         self.option_btn.clicked.connect(self.on_option_clicked)
+        
+        
+    def update_text(self):
+        self.l_distance.setText(str(self.d))
+        self.l_velocity.setText(str(self.v))
+        
     
     def on_exit_clicked(self):
+        params = self.state.radar.target_params
+        targets = params["targets"]
+        index_to_remove = next((i for i, d in enumerate(targets) if d.get('- id') == self.idx), None)
+        if index_to_remove is not None:
+            targets.pop(index_to_remove)
+        
+        self.state.radar.clear_target_parameters()
+        #self.state.radar.set_target_parameters(params)
         self.state.remove_target_id(self.idx)
         self.deleteLater()
         
+        
     def on_option_clicked(self):
-        self.popup = PopupTargetSetting(name=self.l_target.text())
+        self.popup = PopupTargetSetting(ref_obj=self, idx=self.idx, name=self.l_target.text())
         self.popup.show()
+    
         
         

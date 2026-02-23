@@ -65,6 +65,11 @@ class FMCWRadar:
             setattr(self, key, param[key])
 
         self.k = self.f_BW / self.t_c
+        
+    
+    def clear_target_parameters(self):
+        self.object_ranges = []       # in meters
+        self.object_velocities = []   # in m/s
 
     
     def set_target_parameters(self, target_param:dict):
@@ -138,23 +143,33 @@ class FMCWRadar:
         """
         # Data Frame of baseband signal
         data = np.zeros(self.n_sample * self.n_ramps)
+        targets = self.target_params['targets']
 
         # Simulated baseband signal for each specified target
-        for i_t in range(len(self.object_ranges)):
-            object_baseband_response = np.zeros(self.n_sample * self.n_ramps)
-            r = self.object_ranges[i_t] 
-            v = self.object_velocities[i_t]
+        if targets:
+            for target in targets:
+                object_baseband_response = np.zeros(self.n_sample * self.n_ramps)
+                r = target["range_m"]
+                v = target["velocity_mps"]
+                
+                # Create Ramp Sequence and baseband response
+                for i in range(self.n_ramps):
+                    t_chirp = np.linspace(0, self.t_c, self.n_sample) + i * self.t_pri
+    
+                    chirp_response = self.intermediate_signal(t_chirp, r, v) + self.aditive_noise()
+                    object_baseband_response[self.n_sample * i : self.n_sample + self.n_sample * i] = chirp_response[:]
+    
+                # Superposition of all object S_if response signals
+                data = data + object_baseband_response
+        else:
             
-            # Create Ramp Sequence and baseband response
+            object_baseband_response = np.zeros(self.n_sample * self.n_ramps)
             for i in range(self.n_ramps):
-                t_chirp = np.linspace(0, self.t_c, self.n_sample) + i * self.t_pri
-
-                chirp_response = self.intermediate_signal(t_chirp, r, v) + self.aditive_noise()
+                chirp_response = self.aditive_noise()
                 object_baseband_response[self.n_sample * i : self.n_sample + self.n_sample * i] = chirp_response[:]
 
-            # Superposition of all object S_if response signals
             data = data + object_baseband_response
-
+            
         return data
 
 

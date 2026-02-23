@@ -28,12 +28,12 @@ class PlotWidget(QWidget):
         self.layout = QVBoxLayout(self)
         
         self.canvas = None
-        
-        self.draw_RD_map()
+        self.thread = None
         
     
     def remove_plots(self):
-        self.thread.stop()
+        if self.thread:
+            self.thread.stop()
         if self.canvas:
             self.layout.removeWidget(self.canvas)
             self.canvas = None
