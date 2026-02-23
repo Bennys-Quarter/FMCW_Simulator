@@ -45,7 +45,7 @@ if __name__ == '__main__':
     
     # processor.plot_doppler_fft()
     
-    # processor.plot_RD_map(disp="3D")
+    #processor.plot_RD_map(disp="3D")
 
     #%% Thermal Noise floor
     

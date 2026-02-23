@@ -58,16 +58,36 @@ class PlotWidget(QWidget):
         self.canvas = QtInteractor(self)
         self.layout.addWidget(self.canvas.interactor)
         
-        self.x = np.linspace(0, 10, 100)
-        self.y = np.linspace(0, 10, 100)
+        # self.x = np.linspace(0, 256, 256)
+        # self.y = np.linspace(0, 256, 256)
+        # self.x, self.y = np.meshgrid(self.x, self.y)
+        # self.z = np.sin(0.3*self.x) * np.cos(0.3*self.y)
+        # self.grid = pv.StructuredGrid(self.x, self.y, self.z)
+        # self.mesh_actor = self.canvas.add_mesh(self.grid, show_edges=True, cmap="viridis")
+        
+        self.x = np.linspace(0, self.state.radar.n_sample//2, self.state.radar.n_sample//2)
+        self.y = np.linspace(0, self.state.radar.n_ramps//2, self.state.radar.n_ramps//2)
         self.x, self.y = np.meshgrid(self.x, self.y)
-        self.z = np.sin(0.3*self.x) * np.cos(0.3*self.y)
+        
+        self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
+                                                 self.state.radar.n_ramps)
+        
+        raw_data = self.state.radar.get_radar_scan()
+        self.state.processor.process_frame(raw_data, case=2)
+        rdm = self.state.processor.RD_map[0:self.state.radar.n_sample//2, 0:self.state.radar.n_ramps//2]
+        self.z = rdm[:self.state.radar.n_sample//2, :]
+        self.z = 10*np.log10(np.abs(rdm)**2)
         self.grid = pv.StructuredGrid(self.x, self.y, self.z)
+        
         self.mesh_actor = self.canvas.add_mesh(self.grid, show_edges=True, cmap="viridis")
         
         #self.canvas.show_axes()
         self.canvas.reset_camera()
-        self.canvas.show_grid(color='gray', grid='back', location='outer')
+        self.canvas.show_grid(color='gray', grid='back', location='outer',
+                              bounds=[0,self.state.radar.n_sample//2,
+                                      0,self.state.radar.n_ramps//2,
+                                      -160, 0],
+                              fmt="%.0f")
         
         self.thread = UpdateThread(self.x, self.y)
         self.thread.data_updated.connect(self.update_surface)
@@ -108,15 +128,24 @@ class UpdateThread(QThread):
         self.y = y
         self.running = False
         self.t = 0
+        self.state = AppState()
 
     def run(self):
         self.running = True
+        self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
+                                                 self.state.radar.n_ramps)
         while self.running:
-            # Example: dynamic sine-cosine wave
-            z = np.sin(0.3 * self.x + 0.1*self.t) * np.cos(0.3 * self.y + 0.1*self.t)
+            # TODO: Replace by RD_mmap data
+            raw_data = self.state.radar.get_radar_scan()
+            self.state.processor.process_frame(raw_data, case=2)
+            rdm = self.state.processor.RD_map[0:self.state.radar.n_sample//2, 0:self.state.radar.n_ramps//2]
+            z = rdm[:self.state.radar.n_sample//2, :]
+            z = 10*np.log10(np.abs(rdm)**2)
+            
+            #z = np.sin(0.3 * self.x + 0.1*self.t) * np.cos(0.3 * self.y + 0.1*self.t)
             self.data_updated.emit(z)
             self.t += 0.05
-            time.sleep(0.01)  # ~20 FPS
+            time.sleep(0.05)  # ~20 FPS
 
 
     def stop(self):

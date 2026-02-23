@@ -46,7 +46,7 @@ class FMCWRadar:
         self.c = constants.speed_of_light 
         self.k_b = constants.Boltzmann
         self.G = 10 ** (0 / 10)         # LNA and antenna gain in dB
-        self.F_r = 10 ** (13 / 10)      # Noise factor
+        self.F_r = 10 ** (30 / 10)      # Noise factor
         self.L = 10 ** (10 / 10)        # Environment Losses
         self.T_n = 290                  # Thermal nois in °Kelvin
 
@@ -123,8 +123,8 @@ class FMCWRadar:
         Aditive Johnson–Nyquist noise model
         """
         
-        sigma = self.k_b * self.T_n * self.f_s
-        sigma_sample = np.sqrt(sigma)
+        sigma = self.k_b * self.T_n * self.f_s 
+        sigma_sample = np.sqrt(sigma) * self.F_r
         
         return np.random.normal(0, sigma_sample, self.n_sample)
         

@@ -1,6 +1,7 @@
 from PySide6.QtCore import QObject, Signal
 
 from models.fmcw_radar import FMCWRadar
+from processing.fmcw_processing import FMCWSignalProcessor
 from file_handler import FileHandler
 
 class AppState(QObject):
@@ -23,7 +24,9 @@ class AppState(QObject):
         
         self.f_handler = FileHandler()
         chirp_param, target_param = self.f_handler.read_input()
+        
         self.radar = FMCWRadar(chirp_param, target_param)
+        self.processor = FMCWSignalProcessor()
         
         # FMCW - Settings
         self._fmcw_settings = {
