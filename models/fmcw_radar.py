@@ -35,8 +35,10 @@ class FMCWRadar:
         self.set_chirp_parameters(chirp_param)
         self.set_sampling_times(self.t_pri, self.t_pre, self.t_c, self.n_sample, self.n_ramps)
 
-        # TODO: Read all specified target inputs from file
         # Target parameters  
+        self.target_params = {
+            "targets": []
+                }
         self.object_ranges = []       # in meters
         self.object_velocities = []   # in m/s
 

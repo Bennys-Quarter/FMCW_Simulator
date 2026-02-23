@@ -42,6 +42,26 @@ class AppState(QObject):
         "n_ramps" : self.radar.n_ramps
         }
         
+        # Target - List
+        self.t_ids = []
+        
+    def generate_target_id(self):
+        idx=0
+        
+        for num in self.t_ids:
+            idx += 1 
+            if (num+1) is not idx:
+                idx = idx-1
+                break
+               
+        self.t_ids.append(idx)
+        self.t_ids.sort() 
+        return idx
+    
+    
+    def remove_target_id(self, idx:int):
+        self.t_ids.remove(idx)
+    
         
     # ---- Properties ----
     
