@@ -58,8 +58,8 @@ class PlotWidget(QWidget):
         self.canvas = QtInteractor(self)
         self.layout.addWidget(self.canvas.interactor)
         
-        self.x = np.linspace(0, self.state.radar.n_sample//2, self.state.radar.n_sample//2)
-        self.y = np.linspace(-self.state.radar.n_ramps//4, self.state.radar.n_ramps//4, self.state.radar.n_ramps//2)
+        self.x = np.linspace(-self.state.radar.n_ramps//2, self.state.radar.n_ramps//2, self.state.radar.n_ramps)
+        self.y = np.linspace(0, self.state.radar.n_sample//2, self.state.radar.n_sample//2)
         self.x, self.y = np.meshgrid(self.x, self.y)
         
         self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
@@ -67,27 +67,38 @@ class PlotWidget(QWidget):
         
         raw_data = self.state.radar.get_radar_scan()
         self.state.processor.process_frame(raw_data, case=2)
-        rdm = self.state.processor.RD_map[0:self.state.radar.n_sample//2, 0:self.state.radar.n_ramps//2]
-        self.z = rdm[:self.state.radar.n_sample//2, :]
+        rdm = self.state.processor.RD_map[0:self.state.radar.n_sample//2, 0:self.state.radar.n_ramps]
+        self.z = rdm 
         self.z = 10*np.log10(np.abs(rdm)**2)
         self.grid = pv.StructuredGrid(self.x, self.y, self.z)
+        self.grid.dimensions = (self.state.radar.n_ramps, self.state.radar.n_sample//2 , 1)
         self.grid["scalars"] = self.z.ravel()
+        
         self.mesh_actor = self.canvas.add_mesh(self.grid, 
                                                scalars="scalars",
-                                               cmap="viridis",
+                                               cmap="inferno",
                                                clim=[-140,0]
                                                #show_edges=True
                                                )
+    
         
-        
-        
-        #self.canvas.show_axes()
         self.canvas.reset_camera()
+        self.canvas.camera_position = [
+            (-512, -512, 0),  # camera location (look from negative X)
+            (0, 0, 0),    # focal point (center of grid)
+            (0, 0, 1)     # up direction
+        ]
+        self.canvas.camera.view_angle = 30.0
+        self.canvas.camera.elevation = 45.0
+        
         self.canvas.show_grid(grid='back', location='outer',
-                              bounds=[0,self.state.radar.n_sample//2,
-                                      0,self.state.radar.n_ramps//2,
+                              bounds=[-self.state.radar.n_ramps//2,self.state.radar.n_ramps//2,
+                                      0,self.state.radar.n_sample//2,
                                       -160, 0],
-                              fmt="%.0f")
+                              fmt="%.0f",
+                              xtitle="Doppler bins",
+                              ytitle="Range bins",
+                              ztitle="Power in dBfs")
         
         self.thread = UpdateThread(self.x, self.y)
         self.thread.data_updated.connect(self.update_surface)
@@ -107,7 +118,7 @@ class PlotWidget(QWidget):
     def on_run_triggered(self):
         self.remove_plots()
         self.draw_RD_map()
-        self.thread.start()
+        #self.thread.start()
 
 
     def on_stop_triggered(self):
@@ -139,8 +150,8 @@ class UpdateThread(QThread):
         while self.running:
             raw_data = self.state.radar.get_radar_scan()
             self.state.processor.process_frame(raw_data, case=2)
-            rdm = self.state.processor.RD_map[0:self.state.radar.n_sample//2, 0:self.state.radar.n_ramps//2]
-            z = rdm[:self.state.radar.n_sample//2, :]
+            rdm = self.state.processor.RD_map[0:self.state.radar.n_sample//2, 0:self.state.radar.n_ramps]
+            self.z = rdm 
             z = 10*np.log10(np.abs(rdm)**2)
             
             

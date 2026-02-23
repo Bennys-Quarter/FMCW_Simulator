@@ -59,6 +59,7 @@ class PopupTargetSetting(QWidget):
         self.state.radar.target_params = params
         self.state.radar.clear_target_parameters()
         self.state.radar.set_target_parameters(params)
+        self.deleteLater()
     
     
     def on_reset_clicked(self):

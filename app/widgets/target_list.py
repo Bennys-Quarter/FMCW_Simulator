@@ -42,22 +42,34 @@ class TargetList(QScrollArea):
             name = event.mimeData().text()
             if any(name in item for item in self._target_list):
                 char = name.split("Box_", 1)[1][0]
+                
+                # TODO: Improve the assignment of rcs (read from reference file)
+                target = name.split("_")[1]
+                rcs = 0
+                if target == "Pedestrian":
+                    rcs = -5
+                elif target == "Drone":
+                    rcs = -11
+                elif target == "Truck":
+                    rcs = 15
+                
                 idx = self.state.generate_target_id()
                 en_index = char + "_" + str(idx)
                 new_entry = TargetListEntry(l_target=en_index,
-                                            idx=idx)
+                                            idx=idx, rcs=rcs)
                 self.widget().layout().insertWidget(0, new_entry)
-                self.on_new_target(new_entry.idx, new_entry.v, new_entry.d)
+                self.on_new_target(new_entry.idx, new_entry.v, new_entry.d, new_entry.rcs)
                 
         self.setStyleSheet(self._original_stylesheet)
         event.accept()   
 
 
-    def on_new_target(self, idx, v, d):
+    def on_new_target(self, idx, v, d, rcs):
         new_target = {
                 "- id": idx,
                 "range_m": d, 
-                "velocity_mps": v
+                "velocity_mps": v,
+                "rcs_dBsm": rcs
                 }
         targets = self.state.radar.target_params
         targets["targets"].append(new_target)

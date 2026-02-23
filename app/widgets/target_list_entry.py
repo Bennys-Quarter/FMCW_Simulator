@@ -14,7 +14,7 @@ from app.widgets.popup_target_setting import PopupTargetSetting
 from app.core.app_state import AppState
 
 class TargetListEntry(DraggableMixin, QGroupBox):
-    def __init__(self, l_target="T_X",idx=-1, v=0, d=0, parent=None):
+    def __init__(self, l_target="T_X",idx=-1, v=0, d=0, rcs=0, parent=None):
         super().__init__(parent)
         self.ui = Ui_Frame()
         self.ui.setupUi(self)
@@ -24,6 +24,7 @@ class TargetListEntry(DraggableMixin, QGroupBox):
         self.idx = idx
         self.v = v
         self.d = d
+        self.rcs = rcs # in dBsm
         
         self.exit_btn = self.findChild(QToolButton, "ExitButton")
         self.option_btn = self.findChild(QToolButton, "OptionsButton")
