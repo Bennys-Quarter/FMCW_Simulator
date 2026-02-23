@@ -71,12 +71,19 @@ class PlotWidget(QWidget):
         self.z = rdm[:self.state.radar.n_sample//2, :]
         self.z = 10*np.log10(np.abs(rdm)**2)
         self.grid = pv.StructuredGrid(self.x, self.y, self.z)
+        self.grid["scalars"] = self.z.ravel()
+        self.mesh_actor = self.canvas.add_mesh(self.grid, 
+                                               scalars="scalars",
+                                               cmap="viridis",
+                                               clim=[-140,0]
+                                               #show_edges=True
+                                               )
         
-        self.mesh_actor = self.canvas.add_mesh(self.grid, show_edges=True, cmap="viridis")
+        
         
         #self.canvas.show_axes()
         self.canvas.reset_camera()
-        self.canvas.show_grid( grid='back', location='outer',
+        self.canvas.show_grid(grid='back', location='outer',
                               bounds=[0,self.state.radar.n_sample//2,
                                       0,self.state.radar.n_ramps//2,
                                       -160, 0],
@@ -89,6 +96,7 @@ class PlotWidget(QWidget):
 
     def update_surface(self, new_z):
         """Update the surface mesh with new Z values"""
+        self.grid["scalars"] = new_z.ravel()
         points = np.c_[self.x.ravel(), self.y.ravel(), new_z.ravel()]
         self.grid.points = points
         self.mesh_actor.mapper.dataset.points = points
@@ -134,6 +142,7 @@ class UpdateThread(QThread):
             rdm = self.state.processor.RD_map[0:self.state.radar.n_sample//2, 0:self.state.radar.n_ramps//2]
             z = rdm[:self.state.radar.n_sample//2, :]
             z = 10*np.log10(np.abs(rdm)**2)
+            
             
             self.data_updated.emit(z)
             self.t += 1/self.fps
