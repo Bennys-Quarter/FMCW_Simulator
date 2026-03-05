@@ -3,3 +3,4 @@
 .spyproject
 app/compile.sh
 /venv
+__pycache__/
