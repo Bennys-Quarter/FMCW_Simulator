@@ -118,7 +118,6 @@ class PlotWidget(QWidget):
     def on_run_triggered(self):
         self.remove_plots()
         self.draw_RD_map()
-        #self.thread.start()
 
 
     def on_stop_triggered(self):
@@ -142,6 +141,8 @@ class UpdateThread(QThread):
         self.t = 0
         self.fps = 20
         self.state = AppState()
+        self.state.threads.append(self)
+
 
     def run(self):
         self.running = True
@@ -153,7 +154,6 @@ class UpdateThread(QThread):
             rdm = self.state.processor.RD_map[0:self.state.radar.n_sample//2, 0:self.state.radar.n_ramps]
             self.z = rdm 
             z = 10*np.log10(np.abs(rdm)**2)
-            
             
             self.data_updated.emit(z)
             self.t += 1/self.fps

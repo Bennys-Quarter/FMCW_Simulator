@@ -12,6 +12,7 @@ from app.utils.drag_and_drop import DraggableMixin
 from app.widgets.target_list_entry import TargetListEntry
 from app.core.app_state import AppState
 
+
 class TargetList(QScrollArea):
     def __init__(self, parent=None):
         super().__init__(parent)

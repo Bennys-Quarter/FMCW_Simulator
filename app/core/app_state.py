@@ -45,6 +45,12 @@ class AppState(QObject):
         # Target - List
         self.t_ids = []
         
+        # Threads
+        self.threads = []
+        
+        #Windows
+        self.popups = []
+        
     def generate_target_id(self):
         idx=0
         

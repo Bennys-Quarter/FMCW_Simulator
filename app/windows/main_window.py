@@ -1,5 +1,5 @@
 # main_window.py
-from PySide6.QtWidgets import QMainWindow, QLineEdit, QPushButton, QGraphicsView, QMenu
+from PySide6.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGraphicsView, QMenu
 from app.ui_compiled.ui_main_window import Ui_MainWindow
 
 from app.core.app_state import AppState
@@ -80,8 +80,18 @@ class MainWindow(QMainWindow):
         elif action.text() == "Stop":
             self.canvas.on_stop_triggered()
     
+    
+    def closeEvent(self, event):
+        event.ignore()
         
-            
+        for w in QApplication.topLevelWidgets():
+            if w is not self:
+                w.close()
+        
+        self.deleteLater()
+        QApplication.instance().quit()
+
+
     @staticmethod
     def convert_fmcw_to_ui_units(params: dict) -> dict:
         HZ_TO_MHZ = 1e-6
