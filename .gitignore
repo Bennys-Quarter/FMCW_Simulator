@@ -1,2 +1,10 @@
+<<<<<<< HEAD
 .venv
 .idea
+=======
+.venv
+.idea
+.spyproject
+app/compile.sh
+/venv
+>>>>>>> origin/new-root

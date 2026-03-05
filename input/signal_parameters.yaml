@@ -1,5 +1,5 @@
 signal_parameters:
-  f_start: 78.0e9            # Start frequency of the up-chirp (Hz)
+  f_start: 78.0e9             # Start frequency of the up-chirp (Hz)
   f_BW: 500e6                 # Total frequency sweep (Hz)
   f_s: 50e6                   # ADC sampling rate (Hz) (Hz)
   t_c: 10.24e-6               # Duration of a single chirp (seconds)

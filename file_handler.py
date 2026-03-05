@@ -1,11 +1,12 @@
 import yaml
 import re
 
+#TODO: Implement checks for the input files for correct format
+
 class FileHandler:
     def __init__(self):
         """
         Handler class for reading input files and writing output files
-
         """
 
         self.loader = yaml.SafeLoader
@@ -25,4 +26,10 @@ class FileHandler:
         with open("input/signal_parameters.yaml", "r") as file:
             config_dict = yaml.load(file, Loader=self.loader)
 
-        return config_dict
+        with open("input/targets.yaml", "r") as file:
+            target_dict = yaml.load(file, Loader=self.loader)
+
+            
+
+
+        return config_dict, target_dict
