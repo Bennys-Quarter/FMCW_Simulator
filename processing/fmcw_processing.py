@@ -189,7 +189,8 @@ class FMCWSignalProcessor():
 
         for i in range(self.n_ramps):
             ax.plot(10*np.log10(np.abs(self.RD_map[i])**2))
-        ax.show()
+        
+        return fig
 
 
     def plot_RD_map(self, rdm=None, disp: str="2D"):
@@ -208,7 +209,7 @@ class FMCWSignalProcessor():
         
         if disp == "3D":
             fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-            X, Y = np.meshgrid(doppler_axis, range_axis//2) 
+            X, Y = np.meshgrid(doppler_axis, range_axis) 
             surf = ax.plot_surface(X, Y, rdm, cmap='viridis')
 
         elif disp == "2D":

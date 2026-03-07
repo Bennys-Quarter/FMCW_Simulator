@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Mar  7 17:20:07 2026
+Created on Sat Mar  7 18:24:21 2026
 
 @author: benny
-
-This Example shows how to generate one frame of FMCW Radar Data
-
 """
 
 from models.fmcw_radar import FMCWRadar
@@ -35,7 +32,7 @@ if __name__ == "__main__":
     
     # 3. STEP Ploting
     
-    fig_range = processor.plot_range_fft(disp="NCI")
+    fig_range = processor.plot_range_fft(disp="CFAR")
     
     fig_doppler = processor.plot_doppler_fft()
     
