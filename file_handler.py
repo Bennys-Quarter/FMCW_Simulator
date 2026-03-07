@@ -22,14 +22,13 @@ class FileHandler:
             list(u'-+0123456789.'))
 
 
-    def read_input(self):
-        with open("input/signal_parameters.yaml", "r") as file:
+    def read_input(self, path="input/"):
+        
+        with open(path + "signal_parameters.yaml", "r") as file:
             config_dict = yaml.load(file, Loader=self.loader)
 
-        with open("input/targets.yaml", "r") as file:
+        with open(path + "targets.yaml", "r") as file:
             target_dict = yaml.load(file, Loader=self.loader)
-
-            
 
 
         return config_dict, target_dict
