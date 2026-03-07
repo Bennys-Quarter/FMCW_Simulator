@@ -35,4 +35,6 @@ if __name__ == "__main__":
     
     # 3. STEP Ploting
     
-    processor.plot_range_fft()
+    fig_range = processor.plot_range_fft(disp="NCI")
+    
+    fig_doppler = processor.plot_doppler_fft()

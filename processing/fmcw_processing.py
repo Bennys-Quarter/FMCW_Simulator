@@ -35,7 +35,7 @@ class FMCWSignalProcessor():
         self.ca_cfar = {
             "training_cells" : 3,
             "guard_cells" : 3,
-            "cfar_th" : 3
+            "cfar_th" : 0.9
         }
         
         # Signal Processing Chain
@@ -95,75 +95,104 @@ class FMCWSignalProcessor():
         
         for func in self.pro_chain[case]:
             func()
+            
+            
+    def ca_cfar_1d(self, data, gc, tc, th=1):
+        """
+        1D Cell Averaging CFAR
+        
+        Parameters
+        ----------
+        data : array-like
+            Input signal (e.g. power spectrum)
+        gc : int
+            Number of guard cells on each side
+        tc : int
+            Number of training cells on each side
+        th : float
+            Threshold scaling factor
+            
+        Returns
+        -------
+        threshold : np.ndarray
+            CFAR threshold for each cell
+        """
+        data = np.asarray(data)
+        n = len(data)
+        threshold = np.zeros(n)
+        
+        window = gc + tc
+        
+        for i in range(window, n - window):
+        
+            leading = data[i - window:i - gc]
+            trailing = data[i + gc + 1:i + window + 1]
+        
+            noise_level = (np.sum(leading) + np.sum(trailing)) / (2 * tc)
+        
+            threshold[i] = noise_level * th
+        
+        return threshold
 
     
-    def plot_range_fft(self, option: str = "default"):
+    def plot_range_fft(self, disp: str = "default"):
         """ 
-        Plot the range fft 
+        Plots the 2D range fft
         
-        :option:
-            "default" plots all range fft outputs
-            "cfar" plots the cfar output of the NCI range fft
+        disp:
+            "default"   plots all range fft outputs
+            "NCI"       plots the non-choherent-intigrated result off all range ffts
+            "CFAR"      plots the constant false alarm rate decision line based on the nci range fft data
         """
-        plt.figure()
+        fig, ax = plt.subplots()
 
         N = min(self.n_sample//2, np.shape(self.r_fft)[0])
         
-        plt.title(" Range FFT ")
-        plt.xlabel(" Number of Samples ")
-        plt.ylabel("Amplitude in dBFS ")
+        fig.suptitle(" Range FFT ")
+        ax.set_xlabel(" Number of Samples ")
+        ax.set_ylabel("Amplitude in dBFS ")
+        ax.grid(True)
 
-        if option == "cfar":
+        if disp == "CFAR":
             for i in range(N):
                 r_fft = np.mean(10*np.log10(np.abs(self.r_fft)**2), axis=0)
-                cfar = self.ca_cfar_1d(r_fft,
-                                          self.guard_cells,
-                                          self.training_cells,
-                                          self.cfar_th)
+                th_cfar = self.ca_cfar_1d(r_fft,
+                                          self.ca_cfar["guard_cells"],
+                                          self.ca_cfar["training_cells"],
+                                          self.ca_cfar["cfar_th"])
                 
-                plt.plot(cfar, color="red")
+                ax.plot(th_cfar, color="red")
             
-            plt.plot(r_fft, color="blue")
+            ax.plot(r_fft, color="blue")
 
-        elif option == "nci":
+        elif disp == "NCI":
             r_fft_nci = np.mean(10*np.log10(np.abs(self.r_fft)**2), axis=0)
-            plt.plot(r_fft_nci)
-            plt.show()
-
-        elif option == "targets":
-            r_fft_nci = np.mean(10*np.log10(np.abs(self.r_fft)**2), axis=0)
-            cfar = self.ca_cfar_1d(r_fft_nci)
-            self.identify_targets(data=r_fft_nci, threshold=cfar)
-
-            plt.plot(r_fft_nci)
-            x = self.target_list["idx"]
-            y = self.target_list["peak_power_dB"]
-            plt.scatter(x,y, marker="x", color="red")
+            ax.plot(r_fft_nci)
             
         else:
             for i in range(N):
-                plt.plot(10*np.log10(np.abs(self.r_fft[i])**2))
+                ax.plot(10*np.log10(np.abs(self.r_fft[i])**2))
       
-            plt.show()
+        return fig
 
 
-    def plot_doppler_fft(self):
+    def plot_doppler_fft(self, disp: str = "default"):
         """ 
-        Plot the doppler fft 
+        Plots the 2D doppler fft 
         """
-        plt.figure()
+        fig, ax = plt.subplots()
         
-        plt.title(" Doppler FFT ")
-        plt.xlabel(" Number of Ramps ")
-        plt.ylabel("Amplitude in dBFS ")
+        fig.suptitle(" Doppler FFT ")
+        ax.set_xlabel(" Number of Ramps ")
+        ax.set_ylabel("Amplitude in dBFS ")
+        ax.grid(True)
 
         for i in range(self.n_ramps):
-            plt.plot(10*np.log10(np.abs(self.RD_map[i])**2))
-        plt.show()
+            ax.plot(10*np.log10(np.abs(self.RD_map[i])**2))
+        ax.show()
 
 
-
-    def plot_RD_map(self, rdm=None, disp="2D"):
+    def plot_RD_map(self, rdm=None, disp: str="2D"):
         """ 
         Plot the Range Doppler map 
 
@@ -177,7 +206,7 @@ class FMCWSignalProcessor():
         doppler_axis = np.arange(-self.n_ramps//2 , self.n_ramps//2, 1) 
         range_axis = np.arange(0, self.n_sample//2 , 1) 
         
-        if disp == "3D" or disp == "cfar":
+        if disp == "3D":
             fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
             X, Y = np.meshgrid(doppler_axis, range_axis//2) 
             surf = ax.plot_surface(X, Y, rdm, cmap='viridis')
