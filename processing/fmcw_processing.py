@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from numpy.typing import NDArray 
 from scipy.signal.windows import chebwin
 from scipy.fft import fft, fftshift
+from scipy.ndimage import maximum_filter
 
 # Signal Processing Chain
 # 0.: Input: radar intermediate signal time data frame
@@ -35,7 +36,7 @@ class FMCWSignalProcessor():
         self.ca_cfar = {
             "training_cells" : 3,
             "guard_cells" : 3,
-            "cfar_th" : 0.9
+            "cfar_th" : 0.86
         }
         
         # Signal Processing Chain
@@ -133,7 +134,95 @@ class FMCWSignalProcessor():
             threshold[i] = noise_level * th
         
         return threshold
+    
+    
+    def ca_cfar_2d(self, data, gc, tc, th=1):
+        """
+        2D Cell Averaging CFAR
+        
+        Parameters
+        ----------
+        data : 2D array
+            Input signal (e.g. range-doppler map)
+        gc : int
+            Number of guard cells on each side
+        tc : int
+            Number of training cells on each side
+        th : float
+            Threshold scaling factor
+            
+        Returns
+        -------
+        threshold : np.ndarray
+            CFAR threshold for each cell
+        """
 
+        data = np.asarray(data)
+        rows, cols = data.shape
+        threshold = np.zeros_like(data)
+        
+        window = gc + tc
+        
+        for i in range(window, rows - window):
+            for j in range(window, cols - window):
+        
+                # Extract full window
+                region = data[
+                    i - window : i + window + 1,
+                    j - window : j + window + 1
+                ]
+        
+                # Remove guard cells + CUT
+                guard_region = data[
+                    i - gc : i + gc + 1,
+                    j - gc : j + gc + 1
+                ]
+        
+                noise_sum = np.sum(region) - np.sum(guard_region)
+        
+                num_training = region.size - guard_region.size
+                noise_level = noise_sum / num_training
+        
+                threshold[i, j] = noise_level * th
+        
+        return threshold
+    
+    
+    def target_detection(self, option:str = "CFAR"):
+        """
+        Generates a target detection list with indixes of the detected peaks.
+        The detection is performed with the selected detection algorithm
+        
+        Parameters
+        ----------
+        option:
+            - CFAR : Applies the CA-CFAR Algorithm
+        Returns
+        -------
+            - dl : Target detection list 
+
+        """
+        
+        rdm = self.RD_map[:self.n_sample//2, :]
+        rdm = 10*np.log10(np.abs(rdm)**2)
+        
+        dl = []
+        base = -200 # in dBfs
+        
+        if option == "CFAR":
+            th_cfar = self.ca_cfar_2d(rdm,
+                                      self.ca_cfar["guard_cells"],
+                                      self.ca_cfar["training_cells"],
+                                      self.ca_cfar["cfar_th"])
+            
+            rdm[rdm < th_cfar] = base
+            
+            neighborhood = np.ones((3,3))
+            local_max = (rdm == maximum_filter(rdm, footprint=neighborhood))
+            peaks = np.argwhere(local_max)
+            
+        return dl, rdm
+    
     
     def plot_range_fft(self, disp: str = "default"):
         """ 
@@ -194,11 +283,18 @@ class FMCWSignalProcessor():
 
 
     def plot_RD_map(self, rdm=None, disp: str="2D"):
-        """ 
-        Plot the Range Doppler map 
-
-        :disp: 
-            option is either "2D" or "3D"
+        """
+        Plot the Range–Doppler map.
+        
+        Parameters
+        ----------
+        disp : str
+        Display mode for the plot. Options are:
+            
+            - "2D"    : Show the Range–Doppler map as a 2D heatmap.
+            - "3D"    : Show the map as a 3D surface plot.
+            - "CFAR"  : Display the CFAR detection map.
+            - "PEAKS" : Show detected peaks in the Range–Doppler map.
         """
         if rdm is None:
             rdm = self.RD_map[:self.n_sample//2, :]
@@ -217,7 +313,24 @@ class FMCWSignalProcessor():
             ax = fig.add_subplot(111)
             im = ax.imshow(rdm, extent=(doppler_axis.min(), doppler_axis.max(), range_axis.min(), range_axis.max()), origin='lower', cmap='viridis')
             fig.colorbar(im, shrink=0.4, aspect=25 ,pad=0.05 , label="Power in dB")
-
+            
+        elif disp == "CFAR":
+            fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+            th_cfar = self.ca_cfar_2d(rdm,
+                                      self.ca_cfar["guard_cells"],
+                                      self.ca_cfar["training_cells"],
+                                      self.ca_cfar["cfar_th"])
+            X, Y = np.meshgrid(doppler_axis, range_axis) 
+            surf = ax.plot_surface(X, Y, rdm, cmap='viridis', alpha=0.3)
+            lim = self.ca_cfar["guard_cells"] + self.ca_cfar["training_cells"]
+            surf = ax.plot_surface(X[lim:-lim, lim:-lim], Y[lim:-lim, lim:-lim], th_cfar[lim:-lim, lim:-lim], cmap='plasma', alpha=1)
+        elif disp == "PEAKS":
+            _ , rdm = self.target_detection(option = "CFAR")
+            fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+            X, Y = np.meshgrid(doppler_axis, range_axis) 
+            surf = ax.plot_surface(X, Y, rdm, cmap='viridis')
+            
+            
         ax.set_title(f"Range - Doppler Map; Frame")
         ax.set_xlabel("Doppler Bins")
         ax.set_ylabel("Range Bins")
