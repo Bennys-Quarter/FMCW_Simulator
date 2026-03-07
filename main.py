@@ -7,7 +7,7 @@ from models.fmcw_radar import FMCWRadar
 from processing.fmcw_processing import FMCWSignalProcessor
 from file_handler import FileHandler
 
-import sys
+
 from PySide6.QtWidgets import QApplication
 from app.core.app_state import AppState
 from app.windows.main_window import MainWindow  # your wrapper class
@@ -32,7 +32,10 @@ def app():
 
 
 if __name__ == '__main__':
-    app()
+    
+
+    
+    #app()
     
     
     

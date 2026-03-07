@@ -78,14 +78,9 @@ class FMCWRadar:
 
         targets = target_param['targets']
         if targets == None: return
-        for param in targets:
-            for key in param:
-                if key == "range_m":
-                    self.object_ranges.append(param[key]) 
-                if key == "velocity_mps":
-                    self.object_velocities.append(param[key]) 
-        
-
+        for t in targets:
+            self.target_params["targets"].append(t)
+    
 
     def set_sampling_times(self, t_pri, t_pre, t_c, n_sample, n_ramps):
         t = np.zeros(n_sample * n_ramps)
