@@ -6,3 +6,4 @@ app/compile.sh
 __pycache__/
 *.py[cod]
 **/__pycache__/
+app/ui_compiled/__pycache__/*
