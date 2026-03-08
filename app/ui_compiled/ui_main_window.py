@@ -16,16 +16,16 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QFrame,
-    QGridLayout, QHBoxLayout, QLabel, QLineEdit,
-    QMainWindow, QMenu, QMenuBar, QPushButton,
-    QScrollArea, QSizePolicy, QSpacerItem, QStatusBar,
-    QTabWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
+    QFrame, QGridLayout, QGroupBox, QHBoxLayout,
+    QLabel, QLineEdit, QMainWindow, QMenu,
+    QMenuBar, QPushButton, QRadioButton, QScrollArea,
+    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
+    QVBoxLayout, QWidget)
 
 from app.widgets.box_drone import BoxDrone
 from app.widgets.box_pedestrian import BoxPedestrian
 from app.widgets.box_truck import BoxTruck
-from app.widgets.plot_widget import PlotWidget
 from app.widgets.target_list import TargetList
 from app.resources import icons_rc
 from app.resources import icons_rc
@@ -35,7 +35,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(1271, 720)
+        MainWindow.resize(1280, 720)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -70,105 +70,6 @@ class Ui_MainWindow(object):
         self.tabWidget = QTabWidget(self.frame_2)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setGeometry(QRect(6, 10, 351, 651))
-        self.tab_2 = QWidget()
-        self.tab_2.setObjectName(u"tab_2")
-        self.scrollArea = QScrollArea(self.tab_2)
-        self.scrollArea.setObjectName(u"scrollArea")
-        self.scrollArea.setGeometry(QRect(10, 320, 331, 291))
-        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollAreaWidgetContents = QWidget()
-        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 329, 289))
-        self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.Box_Pedestrian = BoxPedestrian(self.scrollAreaWidgetContents)
-        self.Box_Pedestrian.setObjectName(u"Box_Pedestrian")
-
-        self.verticalLayout_4.addWidget(self.Box_Pedestrian)
-
-        self.Box_Drone = BoxDrone(self.scrollAreaWidgetContents)
-        self.Box_Drone.setObjectName(u"Box_Drone")
-
-        self.verticalLayout_4.addWidget(self.Box_Drone)
-
-        self.Box_Truck = BoxTruck(self.scrollAreaWidgetContents)
-        self.Box_Truck.setObjectName(u"Box_Truck")
-
-        self.verticalLayout_4.addWidget(self.Box_Truck)
-
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.TargetList = TargetList(self.tab_2)
-        self.TargetList.setObjectName(u"TargetList")
-        self.TargetList.setGeometry(QRect(10, 10, 331, 301))
-        self.TargetList.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.TargetList.setWidgetResizable(True)
-        self.scrollAreaWidgetContents_2 = QWidget()
-        self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 329, 299))
-        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents_2)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout.addItem(self.verticalSpacer)
-
-        self.TargetList.setWidget(self.scrollAreaWidgetContents_2)
-        self.tabWidget.addTab(self.tab_2, "")
-        self.tab_3 = QWidget()
-        self.tab_3.setObjectName(u"tab_3")
-        self.frame_5 = QFrame(self.tab_3)
-        self.frame_5.setObjectName(u"frame_5")
-        self.frame_5.setGeometry(QRect(10, 10, 331, 601))
-        self.frame_5.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_5.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayoutWidget_2 = QWidget(self.frame_5)
-        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
-        self.verticalLayoutWidget_2.setGeometry(QRect(10, 10, 311, 581))
-        self.verticalLayout_3 = QVBoxLayout(self.verticalLayoutWidget_2)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.sigSetLayout = QFormLayout()
-        self.sigSetLayout.setObjectName(u"sigSetLayout")
-        self.label_3 = QLabel(self.verticalLayoutWidget_2)
-        self.label_3.setObjectName(u"label_3")
-
-        self.sigSetLayout.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_3)
-
-        self.setTargetDetection = QComboBox(self.verticalLayoutWidget_2)
-        self.setTargetDetection.addItem("")
-        self.setTargetDetection.addItem("")
-        self.setTargetDetection.setObjectName(u"setTargetDetection")
-
-        self.sigSetLayout.setWidget(0, QFormLayout.ItemRole.FieldRole, self.setTargetDetection)
-
-
-        self.verticalLayout_3.addLayout(self.sigSetLayout)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout_3.addItem(self.verticalSpacer_2)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.applyButton = QPushButton(self.verticalLayoutWidget_2)
-        self.applyButton.setObjectName(u"applyButton")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.applyButton.sizePolicy().hasHeightForWidth())
-        self.applyButton.setSizePolicy(sizePolicy2)
-        self.applyButton.setMaximumSize(QSize(100, 16777215))
-
-        self.horizontalLayout.addWidget(self.applyButton)
-
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout.addItem(self.horizontalSpacer_3)
-
-
-        self.verticalLayout_3.addLayout(self.horizontalLayout)
-
-        self.tabWidget.addTab(self.tab_3, "")
         self.tab = QWidget()
         self.tab.setObjectName(u"tab")
         self.frame_4 = QFrame(self.tab)
@@ -182,20 +83,83 @@ class Ui_MainWindow(object):
         self.verticalLayout_5 = QVBoxLayout(self.verticalLayoutWidget_3)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.label_21 = QLabel(self.verticalLayoutWidget_3)
+        self.label_21.setObjectName(u"label_21")
+        font = QFont()
+        font.setBold(True)
+        self.label_21.setFont(font)
+
+        self.verticalLayout_5.addWidget(self.label_21)
+
+        self.groupBox = QGroupBox(self.verticalLayoutWidget_3)
+        self.groupBox.setObjectName(u"groupBox")
+        self.horizontalLayoutWidget_7 = QWidget(self.groupBox)
+        self.horizontalLayoutWidget_7.setObjectName(u"horizontalLayoutWidget_7")
+        self.horizontalLayoutWidget_7.setGeometry(QRect(9, 0, 291, 41))
+        self.horizontalLayout_9 = QHBoxLayout(self.horizontalLayoutWidget_7)
+        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+        self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
+        self.radioButton = QRadioButton(self.horizontalLayoutWidget_7)
+        self.radioButton.setObjectName(u"radioButton")
+        self.radioButton.setChecked(True)
+
+        self.horizontalLayout_9.addWidget(self.radioButton)
+
+
+        self.verticalLayout_5.addWidget(self.groupBox)
+
         self.label_4 = QLabel(self.verticalLayoutWidget_3)
         self.label_4.setObjectName(u"label_4")
+        self.label_4.setFont(font)
 
         self.verticalLayout_5.addWidget(self.label_4)
 
-        self.line = QFrame(self.verticalLayoutWidget_3)
-        self.line.setObjectName(u"line")
-        self.line.setFrameShape(QFrame.Shape.HLine)
-        self.line.setFrameShadow(QFrame.Shadow.Sunken)
+        self.groupBox_2 = QGroupBox(self.verticalLayoutWidget_3)
+        self.groupBox_2.setObjectName(u"groupBox_2")
+        self.groupBox_2.setEnabled(True)
+        self.horizontalLayoutWidget_8 = QWidget(self.groupBox_2)
+        self.horizontalLayoutWidget_8.setObjectName(u"horizontalLayoutWidget_8")
+        self.horizontalLayoutWidget_8.setGeometry(QRect(9, 0, 291, 41))
+        self.horizontalLayout_10 = QHBoxLayout(self.horizontalLayoutWidget_8)
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
+        self.horizontalLayout_10.setContentsMargins(0, 0, 0, 0)
+        self.radioButton_2 = QRadioButton(self.horizontalLayoutWidget_8)
+        self.radioButton_2.setObjectName(u"radioButton_2")
+        self.radioButton_2.setChecked(True)
 
-        self.verticalLayout_5.addWidget(self.line)
+        self.horizontalLayout_10.addWidget(self.radioButton_2)
+
+        self.radioButton_4 = QRadioButton(self.horizontalLayoutWidget_8)
+        self.radioButton_4.setObjectName(u"radioButton_4")
+
+        self.horizontalLayout_10.addWidget(self.radioButton_4)
+
+        self.radioButton_3 = QRadioButton(self.horizontalLayoutWidget_8)
+        self.radioButton_3.setObjectName(u"radioButton_3")
+
+        self.horizontalLayout_10.addWidget(self.radioButton_3)
+
+
+        self.verticalLayout_5.addWidget(self.groupBox_2)
+
+        self.horizontalLayout_8 = QHBoxLayout()
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+
+        self.verticalLayout_5.addLayout(self.horizontalLayout_8)
+
+        self.line_3 = QFrame(self.verticalLayoutWidget_3)
+        self.line_3.setObjectName(u"line_3")
+        self.line_3.setFrameShape(QFrame.Shape.HLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_5.addWidget(self.line_3)
 
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout.addItem(self.horizontalSpacer, 0, 3, 1, 1)
+
         self.label_14 = QLabel(self.verticalLayoutWidget_3)
         self.label_14.setObjectName(u"label_14")
 
@@ -338,12 +302,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.label_16, 3, 2, 1, 1)
 
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout.addItem(self.horizontalSpacer, 0, 3, 1, 1)
-
 
         self.verticalLayout_5.addLayout(self.gridLayout)
+
+        self.line = QFrame(self.verticalLayoutWidget_3)
+        self.line.setObjectName(u"line")
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_5.addWidget(self.line)
 
         self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -369,6 +336,255 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addLayout(self.horizontalLayout_2)
 
         self.tabWidget.addTab(self.tab, "")
+        self.tab_5 = QWidget()
+        self.tab_5.setObjectName(u"tab_5")
+        self.frame_6 = QFrame(self.tab_5)
+        self.frame_6.setObjectName(u"frame_6")
+        self.frame_6.setGeometry(QRect(10, 10, 331, 601))
+        self.frame_6.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_6.setFrameShadow(QFrame.Shadow.Raised)
+        self.tabWidget.addTab(self.tab_5, "")
+        self.tab_2 = QWidget()
+        self.tab_2.setObjectName(u"tab_2")
+        self.scrollArea = QScrollArea(self.tab_2)
+        self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setGeometry(QRect(10, 320, 331, 291))
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 329, 289))
+        self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.Box_Pedestrian = BoxPedestrian(self.scrollAreaWidgetContents)
+        self.Box_Pedestrian.setObjectName(u"Box_Pedestrian")
+
+        self.verticalLayout_4.addWidget(self.Box_Pedestrian)
+
+        self.Box_Drone = BoxDrone(self.scrollAreaWidgetContents)
+        self.Box_Drone.setObjectName(u"Box_Drone")
+
+        self.verticalLayout_4.addWidget(self.Box_Drone)
+
+        self.Box_Truck = BoxTruck(self.scrollAreaWidgetContents)
+        self.Box_Truck.setObjectName(u"Box_Truck")
+
+        self.verticalLayout_4.addWidget(self.Box_Truck)
+
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.TargetList = TargetList(self.tab_2)
+        self.TargetList.setObjectName(u"TargetList")
+        self.TargetList.setGeometry(QRect(10, 10, 331, 301))
+        self.TargetList.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.TargetList.setWidgetResizable(True)
+        self.scrollAreaWidgetContents_2 = QWidget()
+        self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 329, 299))
+        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents_2)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
+
+        self.TargetList.setWidget(self.scrollAreaWidgetContents_2)
+        self.tabWidget.addTab(self.tab_2, "")
+        self.tab_3 = QWidget()
+        self.tab_3.setObjectName(u"tab_3")
+        self.frame_5 = QFrame(self.tab_3)
+        self.frame_5.setObjectName(u"frame_5")
+        self.frame_5.setGeometry(QRect(10, 10, 331, 601))
+        self.frame_5.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_5.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayoutWidget_2 = QWidget(self.frame_5)
+        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
+        self.verticalLayoutWidget_2.setGeometry(QRect(10, 10, 311, 581))
+        self.verticalLayout_3 = QVBoxLayout(self.verticalLayoutWidget_2)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.checkBox = QCheckBox(self.verticalLayoutWidget_2)
+        self.checkBox.setObjectName(u"checkBox")
+        self.checkBox.setFont(font)
+
+        self.horizontalLayout_6.addWidget(self.checkBox)
+
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_6.addItem(self.horizontalSpacer_5)
+
+
+        self.verticalLayout_3.addLayout(self.horizontalLayout_6)
+
+        self.line_4 = QFrame(self.verticalLayoutWidget_2)
+        self.line_4.setObjectName(u"line_4")
+        self.line_4.setFrameShape(QFrame.Shape.HLine)
+        self.line_4.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_3.addWidget(self.line_4)
+
+        self.formLayout = QFormLayout()
+        self.formLayout.setObjectName(u"formLayout")
+        self.label_3 = QLabel(self.verticalLayoutWidget_2)
+        self.label_3.setObjectName(u"label_3")
+
+        self.formLayout.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_3)
+
+        self.setTargetDetection = QComboBox(self.verticalLayoutWidget_2)
+        self.setTargetDetection.addItem("")
+        self.setTargetDetection.addItem("")
+        self.setTargetDetection.setObjectName(u"setTargetDetection")
+
+        self.formLayout.setWidget(0, QFormLayout.ItemRole.FieldRole, self.setTargetDetection)
+
+
+        self.verticalLayout_3.addLayout(self.formLayout)
+
+        self.checkBox_2 = QCheckBox(self.verticalLayoutWidget_2)
+        self.checkBox_2.setObjectName(u"checkBox_2")
+        self.checkBox_2.setFont(font)
+
+        self.verticalLayout_3.addWidget(self.checkBox_2)
+
+        self.line_8 = QFrame(self.verticalLayoutWidget_2)
+        self.line_8.setObjectName(u"line_8")
+        self.line_8.setFrameShape(QFrame.Shape.HLine)
+        self.line_8.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_3.addWidget(self.line_8)
+
+        self.formLayout_2 = QFormLayout()
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.label_22 = QLabel(self.verticalLayoutWidget_2)
+        self.label_22.setObjectName(u"label_22")
+
+        self.formLayout_2.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_22)
+
+        self.setTargetDetection_2 = QComboBox(self.verticalLayoutWidget_2)
+        self.setTargetDetection_2.addItem("")
+        self.setTargetDetection_2.addItem("")
+        self.setTargetDetection_2.setObjectName(u"setTargetDetection_2")
+
+        self.formLayout_2.setWidget(0, QFormLayout.ItemRole.FieldRole, self.setTargetDetection_2)
+
+
+        self.verticalLayout_3.addLayout(self.formLayout_2)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_3.addItem(self.verticalSpacer_2)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.applyButton = QPushButton(self.verticalLayoutWidget_2)
+        self.applyButton.setObjectName(u"applyButton")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.applyButton.sizePolicy().hasHeightForWidth())
+        self.applyButton.setSizePolicy(sizePolicy2)
+        self.applyButton.setMaximumSize(QSize(100, 16777215))
+
+        self.horizontalLayout.addWidget(self.applyButton)
+
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_3)
+
+
+        self.verticalLayout_3.addLayout(self.horizontalLayout)
+
+        self.tabWidget.addTab(self.tab_3, "")
+        self.tab_4 = QWidget()
+        self.tab_4.setObjectName(u"tab_4")
+        self.frame_3 = QFrame(self.tab_4)
+        self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setGeometry(QRect(10, 10, 331, 601))
+        self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_3.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayoutWidget_4 = QWidget(self.frame_3)
+        self.verticalLayoutWidget_4.setObjectName(u"verticalLayoutWidget_4")
+        self.verticalLayoutWidget_4.setGeometry(QRect(10, 9, 311, 581))
+        self.verticalLayout_6 = QVBoxLayout(self.verticalLayoutWidget_4)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.label_23 = QLabel(self.verticalLayoutWidget_4)
+        self.label_23.setObjectName(u"label_23")
+        self.label_23.setFont(font)
+
+        self.verticalLayout_6.addWidget(self.label_23)
+
+        self.line_5 = QFrame(self.verticalLayoutWidget_4)
+        self.line_5.setObjectName(u"line_5")
+        self.line_5.setFrameShape(QFrame.Shape.HLine)
+        self.line_5.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_6.addWidget(self.line_5)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.label_25 = QLabel(self.verticalLayoutWidget_4)
+        self.label_25.setObjectName(u"label_25")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.label_25.sizePolicy().hasHeightForWidth())
+        self.label_25.setSizePolicy(sizePolicy3)
+
+        self.horizontalLayout_4.addWidget(self.label_25)
+
+        self.comboBox = QComboBox(self.verticalLayoutWidget_4)
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.setObjectName(u"comboBox")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.comboBox.sizePolicy().hasHeightForWidth())
+        self.comboBox.setSizePolicy(sizePolicy4)
+
+        self.horizontalLayout_4.addWidget(self.comboBox)
+
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_4)
+
+        self.label_24 = QLabel(self.verticalLayoutWidget_4)
+        self.label_24.setObjectName(u"label_24")
+        self.label_24.setFont(font)
+
+        self.verticalLayout_6.addWidget(self.label_24)
+
+        self.line_7 = QFrame(self.verticalLayoutWidget_4)
+        self.line_7.setObjectName(u"line_7")
+        self.line_7.setFrameShape(QFrame.Shape.HLine)
+        self.line_7.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_6.addWidget(self.line_7)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_6.addItem(self.verticalSpacer_4)
+
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.pushButton_2 = QPushButton(self.verticalLayoutWidget_4)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+
+        self.horizontalLayout_3.addWidget(self.pushButton_2)
+
+        self.pushButton = QPushButton(self.verticalLayoutWidget_4)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.horizontalLayout_3.addWidget(self.pushButton)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_3.addItem(self.horizontalSpacer_4)
+
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_3)
+
+        self.tabWidget.addTab(self.tab_4, "")
         self.plot_frame = QFrame(self.frame)
         self.plot_frame.setObjectName(u"plot_frame")
         self.plot_frame.setGeometry(QRect(359, 9, 891, 651))
@@ -380,18 +596,13 @@ class Ui_MainWindow(object):
         self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.plotWidget = PlotWidget(self.verticalLayoutWidget)
-        self.plotWidget.setObjectName(u"plotWidget")
-
-        self.verticalLayout_2.addWidget(self.plotWidget)
-
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1271, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1280, 22))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuRun = QMenu(self.menubar)
@@ -413,7 +624,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(4)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -426,14 +637,14 @@ class Ui_MainWindow(object):
         self.actionExport.setText(QCoreApplication.translate("MainWindow", u"Export", None))
         self.actionRun.setText(QCoreApplication.translate("MainWindow", u"Run", None))
         self.actionStop.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Target - List", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Target Detection", None))
-        self.setTargetDetection.setItemText(0, QCoreApplication.translate("MainWindow", u"Single Threshold", None))
-        self.setTargetDetection.setItemText(1, QCoreApplication.translate("MainWindow", u"CA-CFAR", None))
-
-        self.applyButton.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"Sig. Proc.", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Up Chrip Settings", None))
+        self.label_21.setText(QCoreApplication.translate("MainWindow", u"Source", None))
+        self.groupBox.setTitle("")
+        self.radioButton.setText(QCoreApplication.translate("MainWindow", u"FMCW", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Waveform", None))
+        self.groupBox_2.setTitle("")
+        self.radioButton_2.setText(QCoreApplication.translate("MainWindow", u"Up-Chirp", None))
+        self.radioButton_4.setText(QCoreApplication.translate("MainWindow", u"Down-Chirp", None))
+        self.radioButton_3.setText(QCoreApplication.translate("MainWindow", u"Triangle-Chirp", None))
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"MHz", None))
         self.label_20.setText(QCoreApplication.translate("MainWindow", u"\u00b5s", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"t_fly", None))
@@ -454,7 +665,30 @@ class Ui_MainWindow(object):
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"\u00b5s", None))
         self.applyAndSaveButton.setText(QCoreApplication.translate("MainWindow", u"Apply && Save", None))
         self.showButton.setText(QCoreApplication.translate("MainWindow", u"Show", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"FMCW - Settings", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Signal", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), QCoreApplication.translate("MainWindow", u"MIMO", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Targets", None))
+        self.checkBox.setText(QCoreApplication.translate("MainWindow", u"Target Detection", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Algorithm", None))
+        self.setTargetDetection.setItemText(0, QCoreApplication.translate("MainWindow", u"Single Threshold", None))
+        self.setTargetDetection.setItemText(1, QCoreApplication.translate("MainWindow", u"CA-CFAR", None))
+
+        self.checkBox_2.setText(QCoreApplication.translate("MainWindow", u"DoA", None))
+        self.label_22.setText(QCoreApplication.translate("MainWindow", u"Algorithm", None))
+        self.setTargetDetection_2.setItemText(0, QCoreApplication.translate("MainWindow", u"Angle FFT", None))
+        self.setTargetDetection_2.setItemText(1, QCoreApplication.translate("MainWindow", u"Delay-Sum-Beamformer", None))
+
+        self.applyButton.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"Processing", None))
+        self.label_23.setText(QCoreApplication.translate("MainWindow", u"View", None))
+        self.label_25.setText(QCoreApplication.translate("MainWindow", u"Selection", None))
+        self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"RD-Map", None))
+        self.comboBox.setItemText(1, "")
+
+        self.label_24.setText(QCoreApplication.translate("MainWindow", u"Plot", None))
+        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Run", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Window", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuRun.setTitle(QCoreApplication.translate("MainWindow", u"Window", None))
         self.menuPlots.setTitle(QCoreApplication.translate("MainWindow", u"Plots", None))
