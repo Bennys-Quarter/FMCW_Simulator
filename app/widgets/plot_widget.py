@@ -30,6 +30,10 @@ class PlotWidget(QWidget):
         self.canvas = None
         self.thread = None
         
+        self.plot_mode = {
+            "RDM": "2D"
+            }
+        
     
     def remove_plots(self):
         if self.thread:
@@ -70,35 +74,62 @@ class PlotWidget(QWidget):
         rdm = self.state.processor.RD_map[0:self.state.radar.n_sample//2, 0:self.state.radar.n_ramps]
         self.z = rdm 
         self.z = 10*np.log10(np.abs(rdm)**2)
-        self.grid = pv.StructuredGrid(self.x, self.y, self.z)
-        self.grid.dimensions = (self.state.radar.n_ramps, self.state.radar.n_sample//2 , 1)
-        self.grid["scalars"] = self.z.ravel()
         
-        self.mesh_actor = self.canvas.add_mesh(self.grid, 
-                                               scalars="scalars",
-                                               cmap="inferno",
-                                               clim=[-140,0]
-                                               #show_edges=True
-                                               )
-    
+        if self.plot_mode["RDM"] == "3D":
+            
+            self.grid = pv.StructuredGrid(self.x, self.y, self.z)
+            self.grid.dimensions = (self.state.radar.n_ramps, self.state.radar.n_sample//2 , 1)
+            self.grid["scalars"] = self.z.ravel()
+            
+            self.mesh_actor = self.canvas.add_mesh(self.grid, 
+                                                   scalars="scalars",
+                                                   cmap="inferno",
+                                                   clim=[-140,0]
+                                                   #show_edges=True
+                                                   )
+            
+            
+            self.canvas.reset_camera()
+            self.canvas.camera_position = [
+                (-512, -512, 0),  # camera location (look from negative X)
+                (0, 0, 0),    # focal point (center of grid)
+                (0, 0, 1)     # up direction
+            ]
+            self.canvas.camera.view_angle = 30.0
+            self.canvas.camera.elevation = 45.0
+            
+            self.canvas.show_grid(grid='back', location='outer',
+                                  bounds=[-self.state.radar.n_ramps//2,self.state.radar.n_ramps//2,
+                                          0,self.state.radar.n_sample//2,
+                                          -160, 0],
+                                  fmt="%.0f",
+                                  xtitle="Doppler bins",
+                                  ytitle="Range bins",
+                                  ztitle="Power in dBfs")
         
-        self.canvas.reset_camera()
-        self.canvas.camera_position = [
-            (-512, -512, 0),  # camera location (look from negative X)
-            (0, 0, 0),    # focal point (center of grid)
-            (0, 0, 1)     # up direction
-        ]
-        self.canvas.camera.view_angle = 30.0
-        self.canvas.camera.elevation = 45.0
+        elif self.plot_mode["RDM"] == "2D":
+
+            dy = self.state.radar.n_ramps
+            dx = self.state.radar.n_sample//2
+            
+            self.grid = pv.ImageData(
+                dimensions=(self.state.radar.n_sample//2, self.state.radar.n_ramps, 1),
+                spacing=(dx, dy, 1),
+                origin=(0,0,0)
+            )
+            
+            # Assign scalars — must flatten in column-major ('F') order
+            self.grid.point_data["Power (dB)"] = np.abs(rdm).flatten(order="F")
+            
+            self.mesh_actor = self.canvas.add_mesh(
+                self.grid,
+                scalars="Power (dB)",
+                cmap="viridis",
+                scalar_bar_args={"title": "Power in dB"}
+            )
         
-        self.canvas.show_grid(grid='back', location='outer',
-                              bounds=[-self.state.radar.n_ramps//2,self.state.radar.n_ramps//2,
-                                      0,self.state.radar.n_sample//2,
-                                      -160, 0],
-                              fmt="%.0f",
-                              xtitle="Doppler bins",
-                              ytitle="Range bins",
-                              ztitle="Power in dBfs")
+            self.canvas.view_yx()  # top-down 2D view
+            self.canvas.enable_parallel_projection()  # optional for 2D style
         
         self.thread = UpdateThread(self.x, self.y)
         self.thread.data_updated.connect(self.update_surface)
@@ -107,12 +138,22 @@ class PlotWidget(QWidget):
 
     def update_surface(self, new_z):
         """Update the surface mesh with new Z values"""
-        self.grid["scalars"] = new_z.ravel()
-        points = np.c_[self.x.ravel(), self.y.ravel(), new_z.ravel()]
-        self.grid.points = points
-        self.mesh_actor.mapper.dataset.points = points
-        self.mesh_actor.mapper.dataset.Modified()
-        self.canvas.render()
+        if self.plot_mode["RDM"] == "3D":
+            self.grid["scalars"] = new_z.ravel()
+            points = np.c_[self.x.ravel(), self.y.ravel(), new_z.ravel()]
+            self.grid.points = points
+            self.mesh_actor.mapper.dataset.points = points
+            self.mesh_actor.mapper.dataset.Modified()
+            self.canvas.render()
+            
+        elif self.plot_mode["RDM"] == "2D":
+            self.grid.point_data["Power (dB)"] = new_z.flatten(order="F")
+    
+            # Tell VTK the data has changed
+            self.mesh_actor.mapper.scalar_range = (self.grid.point_data["Power (dB)"].min(),
+                                              self.grid.point_data["Power (dB)"].max())
+            self.grid.Modified()       # mark the dataset as modified
+            self.canvas.render()      # update the display
 
 
     def on_run_triggered(self):

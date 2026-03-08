@@ -8,3 +8,5 @@ __pycache__/
 **/__pycache__/
 app/ui_compiled/__pycache__/*
 app/windows/__pycache__/
+processing/__pycache__/
+app/widgets/__pycache__/
