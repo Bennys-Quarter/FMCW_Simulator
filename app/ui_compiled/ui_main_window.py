@@ -568,15 +568,15 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.pushButton_2 = QPushButton(self.verticalLayoutWidget_4)
-        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.runPlotButton = QPushButton(self.verticalLayoutWidget_4)
+        self.runPlotButton.setObjectName(u"runPlotButton")
 
-        self.horizontalLayout_3.addWidget(self.pushButton_2)
+        self.horizontalLayout_3.addWidget(self.runPlotButton)
 
-        self.pushButton = QPushButton(self.verticalLayoutWidget_4)
-        self.pushButton.setObjectName(u"pushButton")
+        self.stopPlotButton = QPushButton(self.verticalLayoutWidget_4)
+        self.stopPlotButton.setObjectName(u"stopPlotButton")
 
-        self.horizontalLayout_3.addWidget(self.pushButton)
+        self.horizontalLayout_3.addWidget(self.stopPlotButton)
 
         self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -630,7 +630,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(4)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -692,8 +692,8 @@ class Ui_MainWindow(object):
         self.comboBox.setItemText(1, "")
 
         self.label_24.setText(QCoreApplication.translate("MainWindow", u"Plot", None))
-        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Run", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
+        self.runPlotButton.setText(QCoreApplication.translate("MainWindow", u"Run", None))
+        self.stopPlotButton.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Window", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuRun.setTitle(QCoreApplication.translate("MainWindow", u"Window", None))

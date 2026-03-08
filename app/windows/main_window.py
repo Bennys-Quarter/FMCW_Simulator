@@ -50,6 +50,8 @@ class MainWindow(QMainWindow):
         
         self.fmcw_apply_btn = self.findChild(QPushButton, "applyAndSaveButton")
         self.fmcw_show_btn = self.findChild(QPushButton, "showButton")
+        self.run_plot_btn = self.findChild(QPushButton, "runPlotButton")
+        self.stop_plot_btn = self.findChild(QPushButton, "stopPlotButton")
         self.menu_window = self.findChild(QMenu, "menuPlots")
         self.canvas = self.findChild(PlotWidget, "plotWidget")
         
@@ -57,6 +59,8 @@ class MainWindow(QMainWindow):
         self.fmcw_show_btn.clicked.connect(self.on_show_clicked)
         self.menu_window.triggered.connect(self.on_menu_window_triggered)
         self.state.fmcwSettingsChanged.connect(self.on_chirp_param_changed)
+        self.run_plot_btn.clicked.connect(self.on_run_plot_clicked)
+        self.stop_plot_btn.clicked.connect(self.on_stop_plot_clicked)
 
     
     def on_apply_clicked(self):
@@ -72,7 +76,12 @@ class MainWindow(QMainWindow):
         keys = self.state.fmcw_settings.keys()
         for key in keys:
             self.param_settings[key].setText(str(self.state.fmcw_settings[key]))
-            
+    
+    def on_run_plot_clicked(self):
+        self.canvas.on_run_triggered()
+        
+    def on_stop_plot_clicked(self):
+        self.canvas.on_stop_triggered()
     
     def on_menu_window_triggered(self, action):
         if action.text() == "Run":
