@@ -39,6 +39,9 @@ class FMCWSignalProcessor():
             "cfar_th" : 0.86
         }
         
+        # Single threshold 
+        self.t_th = -80
+        
         # Signal Processing Chain
         self.pro_chain = {
             0: [],      
@@ -196,6 +199,7 @@ class FMCWSignalProcessor():
         Parameters
         ----------
         option:
+            - threshold : Target detection based on a single threshold
             - CFAR : Applies the CA-CFAR Algorithm
         Returns
         -------
@@ -219,7 +223,11 @@ class FMCWSignalProcessor():
             
             neighborhood = np.ones((3,3))
             local_max = (rdm == maximum_filter(rdm, footprint=neighborhood))
-            peaks = np.argwhere(local_max)
+            dl = np.argwhere(local_max)
+        elif option == "threshold":
+            rdm[rdm < self.t_th] = base
+            local_max = (rdm == maximum_filter(rdm, footprint=neighborhood))
+            dl = np.argwhere(local_max)
             
         return dl, rdm
     
