@@ -10,3 +10,7 @@ app/ui_compiled/__pycache__/*
 app/windows/__pycache__/
 processing/__pycache__/
 app/widgets/__pycache__/
+app/utils/__pycache__/
+app/__pycache__/
+app/resources/
+models/__pycache__/

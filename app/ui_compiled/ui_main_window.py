@@ -26,7 +26,6 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
 from app.widgets.box_drone import BoxDrone
 from app.widgets.box_pedestrian import BoxPedestrian
 from app.widgets.box_truck import BoxTruck
-from app.widgets.plot_widget import PlotWidget
 from app.widgets.target_list import TargetList
 from app.resources import icons_rc
 from app.resources import icons_rc
@@ -36,7 +35,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(1280, 720)
+        MainWindow.resize(1269, 720)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -53,6 +52,8 @@ class Ui_MainWindow(object):
         self.actionRun.setObjectName(u"actionRun")
         self.actionStop = QAction(MainWindow)
         self.actionStop.setObjectName(u"actionStop")
+        self.actionFullscreen = QAction(MainWindow)
+        self.actionFullscreen.setObjectName(u"actionFullscreen")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
@@ -562,6 +563,100 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_6.addWidget(self.line_7)
 
+        self.groupBox_3 = QGroupBox(self.verticalLayoutWidget_4)
+        self.groupBox_3.setObjectName(u"groupBox_3")
+        self.groupBox_3.setMinimumSize(QSize(0, 50))
+        self.gridLayoutWidget_2 = QWidget(self.groupBox_3)
+        self.gridLayoutWidget_2.setObjectName(u"gridLayoutWidget_2")
+        self.gridLayoutWidget_2.setGeometry(QRect(10, 20, 291, 31))
+        self.gridLayout_2 = QGridLayout(self.gridLayoutWidget_2)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.radioButton_6 = QRadioButton(self.gridLayoutWidget_2)
+        self.radioButton_6.setObjectName(u"radioButton_6")
+
+        self.gridLayout_2.addWidget(self.radioButton_6, 0, 2, 1, 1)
+
+        self.radioButton_5 = QRadioButton(self.gridLayoutWidget_2)
+        self.radioButton_5.setObjectName(u"radioButton_5")
+        self.radioButton_5.setChecked(True)
+
+        self.gridLayout_2.addWidget(self.radioButton_5, 0, 1, 1, 1)
+
+        self.label_26 = QLabel(self.gridLayoutWidget_2)
+        self.label_26.setObjectName(u"label_26")
+
+        self.gridLayout_2.addWidget(self.label_26, 0, 0, 1, 1)
+
+
+        self.verticalLayout_6.addWidget(self.groupBox_3)
+
+        self.groupBox_4 = QGroupBox(self.verticalLayoutWidget_4)
+        self.groupBox_4.setObjectName(u"groupBox_4")
+        self.groupBox_4.setMinimumSize(QSize(0, 50))
+        self.gridLayoutWidget_3 = QWidget(self.groupBox_4)
+        self.gridLayoutWidget_3.setObjectName(u"gridLayoutWidget_3")
+        self.gridLayoutWidget_3.setGeometry(QRect(8, 20, 291, 31))
+        self.gridLayout_3 = QGridLayout(self.gridLayoutWidget_3)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.radioButton_7 = QRadioButton(self.gridLayoutWidget_3)
+        self.radioButton_7.setObjectName(u"radioButton_7")
+
+        self.gridLayout_3.addWidget(self.radioButton_7, 0, 2, 1, 1)
+
+        self.radioButton_8 = QRadioButton(self.gridLayoutWidget_3)
+        self.radioButton_8.setObjectName(u"radioButton_8")
+        self.radioButton_8.setChecked(True)
+
+        self.gridLayout_3.addWidget(self.radioButton_8, 0, 1, 1, 1)
+
+        self.label_29 = QLabel(self.gridLayoutWidget_3)
+        self.label_29.setObjectName(u"label_29")
+
+        self.gridLayout_3.addWidget(self.label_29, 0, 0, 1, 1)
+
+
+        self.verticalLayout_6.addWidget(self.groupBox_4)
+
+        self.groupBox_5 = QGroupBox(self.verticalLayoutWidget_4)
+        self.groupBox_5.setObjectName(u"groupBox_5")
+        self.groupBox_5.setMinimumSize(QSize(0, 80))
+        self.gridLayoutWidget_4 = QWidget(self.groupBox_5)
+        self.gridLayoutWidget_4.setObjectName(u"gridLayoutWidget_4")
+        self.gridLayoutWidget_4.setGeometry(QRect(10, 20, 291, 75))
+        self.gridLayout_4 = QGridLayout(self.gridLayoutWidget_4)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.gridLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.label_27 = QLabel(self.gridLayoutWidget_4)
+        self.label_27.setObjectName(u"label_27")
+
+        self.gridLayout_4.addWidget(self.label_27, 2, 0, 1, 1)
+
+        self.label_30 = QLabel(self.gridLayoutWidget_4)
+        self.label_30.setObjectName(u"label_30")
+
+        self.gridLayout_4.addWidget(self.label_30, 0, 0, 1, 1)
+
+        self.radioButton_10 = QRadioButton(self.gridLayoutWidget_4)
+        self.radioButton_10.setObjectName(u"radioButton_10")
+        self.radioButton_10.setChecked(True)
+
+        self.gridLayout_4.addWidget(self.radioButton_10, 0, 1, 1, 1)
+
+        self.radioButton_9 = QRadioButton(self.gridLayoutWidget_4)
+        self.radioButton_9.setObjectName(u"radioButton_9")
+
+        self.gridLayout_4.addWidget(self.radioButton_9, 0, 2, 1, 1)
+
+        self.checkBox_3 = QCheckBox(self.gridLayoutWidget_4)
+        self.checkBox_3.setObjectName(u"checkBox_3")
+
+        self.gridLayout_4.addWidget(self.checkBox_3, 1, 0, 1, 1)
+
+
+        self.verticalLayout_6.addWidget(self.groupBox_5)
+
         self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_6.addItem(self.verticalSpacer_4)
@@ -594,21 +689,16 @@ class Ui_MainWindow(object):
         self.verticalLayoutWidget = QWidget(self.plot_frame)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
         self.verticalLayoutWidget.setGeometry(QRect(10, 10, 861, 631))
-        self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.plotWidget = PlotWidget(self.verticalLayoutWidget)
-        self.plotWidget.setObjectName(u"plotWidget")
-
-        self.verticalLayout_2.addWidget(self.plotWidget)
-
+        self.plotLayout = QVBoxLayout(self.verticalLayoutWidget)
+        self.plotLayout.setObjectName(u"plotLayout")
+        self.plotLayout.setContentsMargins(0, 0, 0, 0)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1280, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1269, 22))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuRun = QMenu(self.menubar)
@@ -625,8 +715,7 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.actionImport)
         self.menuFile.addAction(self.actionExport)
         self.menuRun.addAction(self.menuPlots.menuAction())
-        self.menuPlots.addAction(self.actionRun)
-        self.menuPlots.addAction(self.actionStop)
+        self.menuPlots.addAction(self.actionFullscreen)
 
         self.retranslateUi(MainWindow)
 
@@ -643,6 +732,7 @@ class Ui_MainWindow(object):
         self.actionExport.setText(QCoreApplication.translate("MainWindow", u"Export", None))
         self.actionRun.setText(QCoreApplication.translate("MainWindow", u"Run", None))
         self.actionStop.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
+        self.actionFullscreen.setText(QCoreApplication.translate("MainWindow", u"Fullscreen", None))
         self.label_21.setText(QCoreApplication.translate("MainWindow", u"Source", None))
         self.groupBox.setTitle("")
         self.radioButton.setText(QCoreApplication.translate("MainWindow", u"FMCW", None))
@@ -689,9 +779,23 @@ class Ui_MainWindow(object):
         self.label_23.setText(QCoreApplication.translate("MainWindow", u"View", None))
         self.label_25.setText(QCoreApplication.translate("MainWindow", u"Selection", None))
         self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"RD-Map", None))
-        self.comboBox.setItemText(1, "")
+        self.comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Combo", None))
 
         self.label_24.setText(QCoreApplication.translate("MainWindow", u"Plot", None))
+        self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"RD Map", None))
+        self.radioButton_6.setText(QCoreApplication.translate("MainWindow", u"3D", None))
+        self.radioButton_5.setText(QCoreApplication.translate("MainWindow", u"2D", None))
+        self.label_26.setText(QCoreApplication.translate("MainWindow", u"Dimension", None))
+        self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Axis", None))
+        self.radioButton_7.setText(QCoreApplication.translate("MainWindow", u"physical", None))
+        self.radioButton_8.setText(QCoreApplication.translate("MainWindow", u"bins", None))
+        self.label_29.setText(QCoreApplication.translate("MainWindow", u"Ticks Lables", None))
+        self.groupBox_5.setTitle(QCoreApplication.translate("MainWindow", u"Visuals", None))
+        self.label_27.setText("")
+        self.label_30.setText(QCoreApplication.translate("MainWindow", u"Background", None))
+        self.radioButton_10.setText(QCoreApplication.translate("MainWindow", u"white", None))
+        self.radioButton_9.setText(QCoreApplication.translate("MainWindow", u"black", None))
+        self.checkBox_3.setText(QCoreApplication.translate("MainWindow", u"Threshold", None))
         self.runPlotButton.setText(QCoreApplication.translate("MainWindow", u"Run", None))
         self.stopPlotButton.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Window", None))

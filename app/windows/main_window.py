@@ -1,5 +1,5 @@
 # main_window.py
-from PySide6.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGraphicsView, QMenu
+from PySide6.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGraphicsView, QMenu, QFrame, QVBoxLayout
 from app.ui_compiled.ui_main_window import Ui_MainWindow
 
 from app.core.app_state import AppState
@@ -8,6 +8,8 @@ from app.widgets.box_drone import BoxDrone
 from app.widgets.box_pedestrian import BoxPedestrian
 from app.widgets.box_truck import BoxTruck
 from app.widgets.plot_widget import PlotWidget
+from app.widgets.plot_format_1_2 import PlotFormat_1_2
+from app.widgets.plot_format_single import PlotFormatSingle
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -53,14 +55,33 @@ class MainWindow(QMainWindow):
         self.run_plot_btn = self.findChild(QPushButton, "runPlotButton")
         self.stop_plot_btn = self.findChild(QPushButton, "stopPlotButton")
         self.menu_window = self.findChild(QMenu, "menuPlots")
-        self.canvas = self.findChild(PlotWidget, "plotWidget")
+        
+        self.canvas_frame = self.findChild(QFrame, "plot_frame")
+        self.canvas_frame.setLayout(QVBoxLayout())
+        self.canvas = None
         
         self.fmcw_apply_btn.clicked.connect(self.on_apply_clicked)
         self.fmcw_show_btn.clicked.connect(self.on_show_clicked)
-        self.menu_window.triggered.connect(self.on_menu_window_triggered)
         self.state.fmcwSettingsChanged.connect(self.on_chirp_param_changed)
         self.run_plot_btn.clicked.connect(self.on_run_plot_clicked)
         self.stop_plot_btn.clicked.connect(self.on_stop_plot_clicked)
+        
+        
+    def add_plots(self):
+        # TODO: check settings first before selecting new_entry
+        # Delete all widgets from plot frame
+        layout = self.canvas_frame.layout()
+        
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
+        
+        new_entry = PlotFormatSingle()
+        layout.insertWidget(0, new_entry)
+        
+        self.canvas = new_entry.findChild(PlotWidget, "plotWidget")
 
     
     def on_apply_clicked(self):
@@ -69,6 +90,8 @@ class MainWindow(QMainWindow):
     
     
     def on_show_clicked(self):
+        self.add_plots()
+        if self.canvas == None: return
         self.canvas.update_plots()
     
 
@@ -77,17 +100,16 @@ class MainWindow(QMainWindow):
         for key in keys:
             self.param_settings[key].setText(str(self.state.fmcw_settings[key]))
     
+    
     def on_run_plot_clicked(self):
+        self.add_plots()
+        if self.canvas == None: return
         self.canvas.on_run_triggered()
+        
         
     def on_stop_plot_clicked(self):
         self.canvas.on_stop_triggered()
-    
-    def on_menu_window_triggered(self, action):
-        if action.text() == "Run":
-            self.canvas.on_run_triggered()
-        elif action.text() == "Stop":
-            self.canvas.on_stop_triggered()
+        self.canvas = None
     
     
     def closeEvent(self, event):
