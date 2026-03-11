@@ -1,5 +1,8 @@
 # main_window.py
-from PySide6.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGraphicsView, QMenu, QFrame, QVBoxLayout
+from PySide6.QtWidgets import (QApplication, QMainWindow, QLineEdit, 
+                               QPushButton, QWidget, QGraphicsView, QMenu, 
+                               QFrame, QVBoxLayout, QPushButton, QHBoxLayout)
+from PySide6.QtGui import QAction
 from app.ui_compiled.ui_main_window import Ui_MainWindow
 
 from app.core.app_state import AppState
@@ -10,6 +13,8 @@ from app.widgets.box_truck import BoxTruck
 from app.widgets.plot_widget import PlotWidget
 from app.widgets.plot_format_1_2 import PlotFormat_1_2
 from app.widgets.plot_format_single import PlotFormatSingle
+from app.widgets.plot_fullscreen_popup import PlotFullscreenPopup
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -55,16 +60,22 @@ class MainWindow(QMainWindow):
         self.run_plot_btn = self.findChild(QPushButton, "runPlotButton")
         self.stop_plot_btn = self.findChild(QPushButton, "stopPlotButton")
         self.menu_window = self.findChild(QMenu, "menuPlots")
+        self.main_frame = self.findChild(QFrame, "mainFrame")
         
-        self.canvas_frame = self.findChild(QFrame, "plot_frame")
+        self.plot_fullscreen_action = self.findChild(QAction, "actionFullscreen")
+        
+        self.canvas_frame = self.findChild(QFrame, "plotFrame")
         self.canvas_frame.setLayout(QVBoxLayout())
+        
         self.canvas = None
+        self.plot_full_screen_popup = None
         
         self.fmcw_apply_btn.clicked.connect(self.on_apply_clicked)
         self.fmcw_show_btn.clicked.connect(self.on_show_clicked)
         self.state.fmcwSettingsChanged.connect(self.on_chirp_param_changed)
         self.run_plot_btn.clicked.connect(self.on_run_plot_clicked)
         self.stop_plot_btn.clicked.connect(self.on_stop_plot_clicked)
+        self.plot_fullscreen_action.triggered.connect(self.on_plot_fullscreen_triggered)
         
         
     def add_plots(self):
@@ -111,6 +122,12 @@ class MainWindow(QMainWindow):
         self.canvas.on_stop_triggered()
         self.canvas = None
     
+    
+    def on_plot_fullscreen_triggered(self):
+        self.plot_full_screen_popup = None
+        if self.canvas == None: return
+        self.plot_full_screen_popup = PlotFullscreenPopup(self.main_frame, self.canvas_frame)
+        
     
     def closeEvent(self, event):
         event.ignore()
