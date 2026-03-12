@@ -31,7 +31,9 @@ class PlotWidget(QWidget):
         self.thread = None
         
         self.plot_mode = {
-            "RDM": "2D"
+            "RDM": "3D",
+            "Background Color": "black",
+            "Grid Color": "white"
             }
         
     
@@ -88,13 +90,15 @@ class PlotWidget(QWidget):
                                                    #show_edges=True
                                                    )
             
+            self.canvas.show_bounds(bounds=(0,self.state.radar.n_sample//2, -self.state.radar.n_ramps//2, self.state.radar.n_ramps//2, -140, 0))    
             
             self.canvas.reset_camera()
-            self.canvas.camera_position = [
-                (-512, -512, 0),  # camera location (look from negative X)
-                (0, 0, 0),    # focal point (center of grid)
-                (0, 0, 1)     # up direction
-            ]
+            self.canvas.camera_position = 'xz'
+            # [
+            #     (-512, -512, 0),  # camera location (look from negative X)
+            #     (0, 0, 0),    # focal point (center of grid)
+            #     (0, 0, 1)     # up direction
+            # ]
             self.canvas.camera.view_angle = 30.0
             self.canvas.camera.elevation = 45.0
             
@@ -106,13 +110,16 @@ class PlotWidget(QWidget):
                                   xtitle="Doppler bins",
                                   ytitle="Range bins",
                                   ztitle="Power in dBfs")
+            
+            self.canvas.set_background(color=self.plot_mode["Background Color"])
+            self.canvas.show_grid(color=self.plot_mode["Grid Color"])
         
         elif self.plot_mode["RDM"] == "2D":
 
             dy = self.state.radar.n_ramps
             dx = self.state.radar.n_sample//2
             
-            self.grid = pv.ImageData(
+            self.grid = pv.ImaplottergeData(
                 dimensions=(self.state.radar.n_sample//2, self.state.radar.n_ramps, 1),
                 spacing=(dx, dy, 1),
                 origin=(0,0,0)
