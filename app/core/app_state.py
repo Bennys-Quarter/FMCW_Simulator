@@ -39,8 +39,20 @@ class AppState(QObject):
         "t_fly" : self.radar.t_fly,
         "t_wait" : self.radar.t_wait,
         "n_sample" : self.radar.n_sample,
-        "n_ramps" : self.radar.n_ramps
+        "n_ramps" : self.radar.n_ramps,
+        "r_max" : self.radar.R_max,
+        "v_max" : self.radar.V_max
         }
+        
+        print(self._fmcw_settings["v_max"])
+        
+        # Plot - Settings
+        self.plot_mode = {
+            "RDM": "2D",
+            "Background Color": "black",
+            "Grid Color": "black",
+            "Axis Ticks": "bins"
+            }
         
         # Target - List
         self.t_ids = []

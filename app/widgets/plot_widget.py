@@ -30,12 +30,6 @@ class PlotWidget(QWidget):
         self.canvas = None
         self.thread = None
         
-        self.plot_mode = {
-            "RDM": "3D",
-            "Background Color": "black",
-            "Grid Color": "white"
-            }
-        
     
     def remove_plots(self):
         if self.thread:
@@ -64,10 +58,6 @@ class PlotWidget(QWidget):
         self.canvas = QtInteractor(self)
         self.layout.addWidget(self.canvas.interactor)
         
-        self.x = np.linspace(-self.state.radar.n_ramps//2, self.state.radar.n_ramps//2, self.state.radar.n_ramps)
-        self.y = np.linspace(0, self.state.radar.n_sample//2, self.state.radar.n_sample//2)
-        self.x, self.y = np.meshgrid(self.x, self.y)
-        
         self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
                                                  self.state.radar.n_ramps)
         
@@ -77,7 +67,20 @@ class PlotWidget(QWidget):
         self.z = rdm 
         self.z = 10*np.log10(np.abs(rdm)**2)
         
-        if self.plot_mode["RDM"] == "3D":
+        if self.state.plot_mode["RDM"] == "3D":
+            
+            if self.state.plot_mode["Axis Ticks"] == "bins" :
+            
+                self.x = np.linspace(-self.state.radar.n_ramps//2, self.state.radar.n_ramps//2, self.state.radar.n_ramps)
+                self.y = np.linspace(0, self.state.radar.n_sample//2, self.state.radar.n_sample//2)
+                self.x, self.y = np.meshgrid(self.x, self.y)
+            
+            elif self.state.plot_mode["Axis Ticks"] == "physical" :
+
+                self.x = np.linspace(-self.state.radar.V_max, self.state.radar.V_max, self.state.fmcw_settings["n_ramps"])
+                self.y = np.linspace(0, self.state.radar.R_max, self.state.fmcw_settings["n_sample"])
+
+                self.x, self.y = np.meshgrid(self.x, self.y)
             
             self.grid = pv.StructuredGrid(self.x, self.y, self.z)
             self.grid.dimensions = (self.state.radar.n_ramps, self.state.radar.n_sample//2 , 1)
@@ -104,22 +107,23 @@ class PlotWidget(QWidget):
             
             self.canvas.show_grid(grid='back', location='outer',
                                   bounds=[-self.state.radar.n_ramps//2,self.state.radar.n_ramps//2,
-                                          0,self.state.radar.n_sample//2,
+                                          0,self.state.radar.R_max,
                                           -160, 0],
-                                  fmt="%.0f",
+                                  fmt="%.f",
                                   xtitle="Doppler bins",
                                   ytitle="Range bins",
                                   ztitle="Power in dBfs")
             
-            self.canvas.set_background(color=self.plot_mode["Background Color"])
-            self.canvas.show_grid(color=self.plot_mode["Grid Color"])
+            print(self.state.radar.R_max)
+            self.canvas.set_background(color=self.state.plot_mode["Background Color"])
+            self.canvas.show_grid(color=self.state.plot_mode["Grid Color"])
         
-        elif self.plot_mode["RDM"] == "2D":
+        elif self.state.plot_mode["RDM"] == "2D":
 
             dy = self.state.radar.n_ramps
             dx = self.state.radar.n_sample//2
             
-            self.grid = pv.ImaplottergeData(
+            self.grid = pv.ImageData(
                 dimensions=(self.state.radar.n_sample//2, self.state.radar.n_ramps, 1),
                 spacing=(dx, dy, 1),
                 origin=(0,0,0)
@@ -145,7 +149,7 @@ class PlotWidget(QWidget):
 
     def update_surface(self, new_z):
         """Update the surface mesh with new Z values"""
-        if self.plot_mode["RDM"] == "3D":
+        if self.state.plot_mode["RDM"] == "3D":
             self.grid["scalars"] = new_z.ravel()
             points = np.c_[self.x.ravel(), self.y.ravel(), new_z.ravel()]
             self.grid.points = points
@@ -153,7 +157,7 @@ class PlotWidget(QWidget):
             self.mesh_actor.mapper.dataset.Modified()
             self.canvas.render()
             
-        elif self.plot_mode["RDM"] == "2D":
+        elif self.state.plot_mode["RDM"] == "2D":
             self.grid.point_data["Power (dB)"] = new_z.flatten(order="F")
     
             # Tell VTK the data has changed

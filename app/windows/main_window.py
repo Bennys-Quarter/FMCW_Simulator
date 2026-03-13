@@ -1,7 +1,8 @@
 # main_window.py
 from PySide6.QtWidgets import (QApplication, QMainWindow, QLineEdit, 
                                QPushButton, QWidget, QGraphicsView, QMenu, 
-                               QFrame, QVBoxLayout, QPushButton, QHBoxLayout)
+                               QFrame, QVBoxLayout, QPushButton, QHBoxLayout,
+                               QComboBox, QRadioButton)
 from PySide6.QtGui import QAction
 from app.ui_compiled.ui_main_window import Ui_MainWindow
 
@@ -61,6 +62,14 @@ class MainWindow(QMainWindow):
         self.stop_plot_btn = self.findChild(QPushButton, "stopPlotButton")
         self.menu_window = self.findChild(QMenu, "menuPlots")
         self.main_frame = self.findChild(QFrame, "mainFrame")
+        self.plot_layout_selector = self.findChild(QComboBox, "plotLayoutSelector")
+        self.rd_btn_2D = self.findChild(QRadioButton, "radioButton_2D")
+        self.rd_btn_3D = self.findChild(QRadioButton, "radioButton_3D")
+        self.rd_btn_black = self.findChild(QRadioButton, "radioButton_black")
+        self.rd_btn_white = self.findChild(QRadioButton, "radioButton_white")
+        self.rd_btn_bins = self.findChild(QRadioButton, "radioButton_bins")
+        self.rd_btn_physical = self.findChild(QRadioButton, "radioButton_physical")
+        
         
         self.plot_fullscreen_action = self.findChild(QAction, "actionFullscreen")
         
@@ -76,6 +85,12 @@ class MainWindow(QMainWindow):
         self.run_plot_btn.clicked.connect(self.on_run_plot_clicked)
         self.stop_plot_btn.clicked.connect(self.on_stop_plot_clicked)
         self.plot_fullscreen_action.triggered.connect(self.on_plot_fullscreen_triggered)
+        self.rd_btn_2D.toggled.connect(self.on_plot_setting_changed)
+        self.rd_btn_3D.toggled.connect(self.on_plot_setting_changed) 
+        self.rd_btn_black.toggled.connect(self.on_plot_setting_changed)
+        self.rd_btn_white.toggled.connect(self.on_plot_setting_changed)
+        self.rd_btn_bins.toggled.connect(self.on_plot_setting_changed)
+        self.rd_btn_physical.toggled.connect(self.on_plot_setting_changed)
         
         
     def add_plots(self):
@@ -93,7 +108,25 @@ class MainWindow(QMainWindow):
         layout.insertWidget(0, new_entry)
         
         self.canvas = new_entry.findChild(PlotWidget, "plotWidget")
-
+    
+    
+    def disable_setting(self):
+        self.rd_btn_2D.setEnabled(False)
+        self.rd_btn_3D.setEnabled(False)
+        self.rd_btn_black.setEnabled(False) 
+        self.rd_btn_white.setEnabled(False)
+        self.rd_btn_bins.setEnabled(False)
+        self.rd_btn_physical.setEnabled(False)
+        
+    
+    def enable_setting(self):
+        self.rd_btn_2D.setEnabled(True)
+        self.rd_btn_3D.setEnabled(True)
+        self.rd_btn_black.setEnabled(True) 
+        self.rd_btn_white.setEnabled(True)
+        self.rd_btn_bins.setEnabled(True)
+        self.rd_btn_physical.setEnabled(True)
+    
     
     def on_apply_clicked(self):
         setting = {name:widget.text() for name, widget in self.param_settings.items()}
@@ -114,6 +147,7 @@ class MainWindow(QMainWindow):
     
     def on_run_plot_clicked(self):
         self.add_plots()
+        self.disable_setting()
         if self.canvas == None: return
         self.canvas.on_run_triggered()
         
@@ -121,13 +155,33 @@ class MainWindow(QMainWindow):
     def on_stop_plot_clicked(self):
         self.canvas.on_stop_triggered()
         self.canvas = None
+        self.enable_setting()
     
     
     def on_plot_fullscreen_triggered(self):
         self.plot_full_screen_popup = None
         if self.canvas == None: return
         self.plot_full_screen_popup = PlotFullscreenPopup(self.main_frame, self.canvas_frame)
+    
         
+    def on_plot_setting_changed(self):
+        if self.rd_btn_2D.isChecked():
+            self.state.plot_mode["RDM"] = "2D"
+        elif self.rd_btn_3D.isChecked():
+            self.state.plot_mode["RDM"] = "3D"
+        
+        if self.rd_btn_black.isChecked():
+            self.state.plot_mode["Background Color"] = "black"
+            self.state.plot_mode["Grid Color"] = "white"
+        elif self.rd_btn_white.isChecked():
+            self.state.plot_mode["Background Color"] = "white"
+            self.state.plot_mode["Grid Color"] = "black"
+        
+        if self.rd_btn_bins.isChecked():
+            self.state.plot_mode["Axis Ticks"] = "bins"
+        elif self.rd_btn_physical.isChecked():
+            self.state.plot_mode["Axis Ticks"] = "physical"
+            
     
     def closeEvent(self, event):
         event.ignore()

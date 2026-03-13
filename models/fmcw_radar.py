@@ -39,6 +39,7 @@ class FMCWRadar:
         self.target_params = {
             "targets": []
                 }
+        
         self.object_ranges = []       # in meters
         self.object_velocities = []   # in m/s
 
@@ -53,9 +54,12 @@ class FMCWRadar:
         self.L = 10 ** (10 / 10)        # Environment Losses
         self.T_n = 290                  # Thermal nois in °Kelvin
 
+        self.wavelength = self.c / self.f_start
+        self.slope = self.f_BW / self.t_c
 
         # Performance parameter
-        self.R_max = self.c/(2*self.f_BW)
+        self.R_max = self.c/(2*self.f_BW) * self.n_sample
+        self.V_max = (self.wavelength/(2 * self.t_pri))
 
 
     def set_chirp_parameters(self, chirp_param:dict ):
@@ -187,12 +191,10 @@ class FMCWRadar:
         # Convert antenna gain dBi → linear
         G = 10 ** (self.G / 10)
         
-        
-        wavelength = c / self.f_start
-        
-        Pr = (Pt * (G ** 2) * (wavelength ** 2) * sigma / ((4 * np.pi) ** 3 * r ** 4)) * self.G_LNA
+        Pr = (Pt * (G ** 2) * (self.wavelength ** 2) * sigma / ((4 * np.pi) ** 3 * r ** 4)) * self.G_LNA
         A_r = np.sqrt(Pr)
         return float(A_r)
+
 
     def plot_transmit_chirp(self):
         """ Plot the frequency domain up chirp signal """

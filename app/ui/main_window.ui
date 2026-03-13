@@ -78,7 +78,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>4</number>
           </property>
           <widget class="QWidget" name="tab">
            <attribute name="title">
@@ -811,7 +811,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="comboBox">
+                 <widget class="QComboBox" name="plotLayoutSelector">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -873,14 +873,14 @@
                  </property>
                  <layout class="QGridLayout" name="gridLayout_2">
                   <item row="0" column="2">
-                   <widget class="QRadioButton" name="radioButton_6">
+                   <widget class="QRadioButton" name="radioButton_3D">
                     <property name="text">
                      <string>3D</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QRadioButton" name="radioButton_5">
+                   <widget class="QRadioButton" name="radioButton_2D">
                     <property name="text">
                      <string>2D</string>
                     </property>
@@ -922,14 +922,14 @@
                  </property>
                  <layout class="QGridLayout" name="gridLayout_3">
                   <item row="0" column="2">
-                   <widget class="QRadioButton" name="radioButton_7">
+                   <widget class="QRadioButton" name="radioButton_physical">
                     <property name="text">
                      <string>physical</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QRadioButton" name="radioButton_8">
+                   <widget class="QRadioButton" name="radioButton_bins">
                     <property name="text">
                      <string>bins</string>
                     </property>
@@ -954,7 +954,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>80</height>
+                  <height>50</height>
                  </size>
                 </property>
                 <property name="title">
@@ -966,17 +966,10 @@
                    <x>10</x>
                    <y>20</y>
                    <width>291</width>
-                   <height>75</height>
+                   <height>51</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_4">
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="label_27">
-                    <property name="text">
-                     <string/>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="0" column="0">
                    <widget class="QLabel" name="label_30">
                     <property name="text">
@@ -984,27 +977,27 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="1">
-                   <widget class="QRadioButton" name="radioButton_10">
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_27">
                     <property name="text">
-                     <string>white</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
+                     <string/>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="2">
-                   <widget class="QRadioButton" name="radioButton_9">
+                   <widget class="QRadioButton" name="radioButton_black">
                     <property name="text">
                      <string>black</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="0">
-                   <widget class="QCheckBox" name="checkBox_3">
+                  <item row="0" column="1">
+                   <widget class="QRadioButton" name="radioButton_white">
                     <property name="text">
-                     <string>Threshold</string>
+                     <string>white</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
                     </property>
                    </widget>
                   </item>
