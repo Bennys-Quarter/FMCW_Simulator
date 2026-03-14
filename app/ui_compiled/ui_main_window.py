@@ -617,12 +617,13 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
         self.radioButton_physical = QRadioButton(self.gridLayoutWidget_3)
         self.radioButton_physical.setObjectName(u"radioButton_physical")
+        self.radioButton_physical.setChecked(True)
 
         self.gridLayout_3.addWidget(self.radioButton_physical, 0, 2, 1, 1)
 
         self.radioButton_bins = QRadioButton(self.gridLayoutWidget_3)
         self.radioButton_bins.setObjectName(u"radioButton_bins")
-        self.radioButton_bins.setChecked(True)
+        self.radioButton_bins.setChecked(False)
 
         self.gridLayout_3.addWidget(self.radioButton_bins, 0, 1, 1, 1)
 
@@ -655,12 +656,13 @@ class Ui_MainWindow(object):
 
         self.radioButton_black = QRadioButton(self.gridLayoutWidget_4)
         self.radioButton_black.setObjectName(u"radioButton_black")
+        self.radioButton_black.setChecked(True)
 
         self.gridLayout_4.addWidget(self.radioButton_black, 0, 2, 1, 1)
 
         self.radioButton_white = QRadioButton(self.gridLayoutWidget_4)
         self.radioButton_white.setObjectName(u"radioButton_white")
-        self.radioButton_white.setChecked(True)
+        self.radioButton_white.setChecked(False)
 
         self.gridLayout_4.addWidget(self.radioButton_white, 0, 1, 1, 1)
 

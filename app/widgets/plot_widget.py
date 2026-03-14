@@ -26,7 +26,7 @@ class PlotWidget(QWidget):
         
         self.setParent(parent)
         self.state = AppState()
-        self.layout = QVBoxLayout(self)
+        self.layout = None
         
         self.canvas = None
         self.thread = None
@@ -53,12 +53,39 @@ class PlotWidget(QWidget):
         self.canvas = FigureCanvas(self.fig)
         self.layout.addWidget(self.canvas)
         self.canvas.draw()
+        
+    
+    def prepare_plot_widget(self, option:str = "RDM"):
+        """
+        Draw radar plots depending on the settings in the plot window
+        
+        option:
+            - RDM : Plots a single range doppler map
+            - Signals : Plot a the signal result after each processing step 
+        Returns
+        -------
+        None.
+
+        """
+        
+        if option == "RD-Map":
+            self.layout = QVBoxLayout(self)
+            self.draw_RD_map()
+            self.layout.addWidget(self.canvas.interactor)
+        elif option == "Signals":
+            pass
+        
+    
+    def draw_chirp(self):
+        pass
+    
+    
+    def draw_
+    
 
 
     def draw_RD_map(self):
         self.canvas = QtInteractor(self)
-        self.layout.addWidget(self.canvas.interactor)
-        
         
         self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
                                                  self.state.radar.n_ramps)
@@ -210,7 +237,6 @@ class PlotWidget(QWidget):
             self.canvas.camera.zoom(1.1)
             self.canvas.enable_parallel_projection()  # optional for 2D style
         
-
         
         self.thread = UpdateThread(self.x, self.y)
         self.thread.data_updated.connect(self.update_surface)
@@ -237,15 +263,17 @@ class PlotWidget(QWidget):
 
     def on_run_triggered(self):
         self.remove_plots()
-        self.draw_RD_map()
+        self.prepare_plot_widget(option = self.state.plot_mode["Window"])
 
 
     def on_stop_triggered(self):
-        self.thread.stop()
+        if self.thread:
+            self.thread.stop()
         
     
     def closeEvent(self, event):
-        self.thread.stop()
+        if self.thread:
+            self.thread.stop()
         event.accept()
 
 

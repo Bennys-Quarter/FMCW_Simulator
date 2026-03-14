@@ -104,13 +104,16 @@ class MainWindow(QMainWindow):
         self.rd_btn_white.toggled.connect(self.on_plot_setting_changed)
         self.rd_btn_bins.toggled.connect(self.on_plot_setting_changed)
         self.rd_btn_physical.toggled.connect(self.on_plot_setting_changed)
-        self.sp_box_max_clim.valueChanged.connect(self.on_clim_value_changed)
-        self.sp_box_min_clim.valueChanged.connect(self.on_clim_value_changed)
+        self.sp_box_max_clim.valueChanged.connect(self.on_plot_setting_changed)
+        self.sp_box_min_clim.valueChanged.connect(self.on_plot_setting_changed)
+        self.plot_layout_selector.currentIndexChanged.connect(self.on_plot_setting_changed)
+        
+        self.init_settings()
     
     
     def init_settings(self):
-        pass
-    
+        self.on_plot_setting_changed()
+        
         
     def add_plots(self):
         # TODO: check settings first before selecting new_entry
@@ -169,13 +172,6 @@ class MainWindow(QMainWindow):
         if self.canvas == None: return
         self.plot_full_screen_popup = PlotFullscreenPopup(self.main_frame, self.canvas_frame)
     
-    
-    def on_clim_value_changed(self):
-        c_max = self.sp_box_max_clim.value()
-        c_min = self.sp_box_min_clim.value()
-        
-        self.state.plot_mode["Clim"] = [c_min, c_max]
-        
         
     def on_plot_setting_changed(self):
         if self.rd_btn_2D.isChecked():
@@ -194,7 +190,14 @@ class MainWindow(QMainWindow):
             self.state.plot_mode["Axis Ticks"] = "bins"
         elif self.rd_btn_physical.isChecked():
             self.state.plot_mode["Axis Ticks"] = "physical"
-            
+        
+        c_max = self.sp_box_max_clim.value()
+        c_min = self.sp_box_min_clim.value()
+        
+        self.state.plot_mode["Window"] = self.plot_layout_selector.currentText()
+        
+        self.state.plot_mode["Clim"] = [c_min, c_max]
+    
     
     def closeEvent(self, event):
         event.ignore()

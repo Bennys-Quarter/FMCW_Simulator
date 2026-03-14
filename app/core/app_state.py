@@ -46,11 +46,12 @@ class AppState(QObject):
         
         # Plot - Settings
         self.plot_mode = {
+            "Window" : "RD-Map",
             "RDM": "2D",
             "Background Color": "black",
             "Grid Color": "white",
             "Axis Ticks": "bins",
-            "Clim" : [-120, -35]
+            "Clim" : [-120, -35],
             }
         
         # Target - List
