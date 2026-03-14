@@ -2,7 +2,7 @@
 from PySide6.QtWidgets import (QApplication, QMainWindow, QLineEdit, 
                                QPushButton, QWidget, QGraphicsView, QMenu, 
                                QFrame, QVBoxLayout, QPushButton, QHBoxLayout,
-                               QComboBox, QRadioButton)
+                               QComboBox, QRadioButton, QSpinBox)
 from PySide6.QtGui import QAction
 from app.ui_compiled.ui_main_window import Ui_MainWindow
 
@@ -69,7 +69,8 @@ class MainWindow(QMainWindow):
         self.rd_btn_white = self.findChild(QRadioButton, "radioButton_white")
         self.rd_btn_bins = self.findChild(QRadioButton, "radioButton_bins")
         self.rd_btn_physical = self.findChild(QRadioButton, "radioButton_physical")
-        
+        self.sp_box_min_clim = self.findChild(QSpinBox, "spinMinClimBox")
+        self.sp_box_max_clim = self.findChild(QSpinBox, "spinMaxClimBox")
         
         self.plot_fullscreen_action = self.findChild(QAction, "actionFullscreen")
         
@@ -78,6 +79,18 @@ class MainWindow(QMainWindow):
         
         self.canvas = None
         self.plot_full_screen_popup = None
+        
+        self.setting_widgets = [
+            self.rd_btn_2D, 
+            self.rd_btn_3D, 
+            self.rd_btn_black,
+            self.rd_btn_white,
+            self.rd_btn_bins,
+            self.rd_btn_physical, 
+            self.sp_box_min_clim, 
+            self.sp_box_max_clim, 
+            self.run_plot_btn
+            ]
         
         self.fmcw_apply_btn.clicked.connect(self.on_apply_clicked)
         self.fmcw_show_btn.clicked.connect(self.on_show_clicked)
@@ -91,7 +104,13 @@ class MainWindow(QMainWindow):
         self.rd_btn_white.toggled.connect(self.on_plot_setting_changed)
         self.rd_btn_bins.toggled.connect(self.on_plot_setting_changed)
         self.rd_btn_physical.toggled.connect(self.on_plot_setting_changed)
-        
+        self.sp_box_max_clim.valueChanged.connect(self.on_clim_value_changed)
+        self.sp_box_min_clim.valueChanged.connect(self.on_clim_value_changed)
+    
+    
+    def init_settings(self):
+        pass
+    
         
     def add_plots(self):
         # TODO: check settings first before selecting new_entry
@@ -110,22 +129,9 @@ class MainWindow(QMainWindow):
         self.canvas = new_entry.findChild(PlotWidget, "plotWidget")
     
     
-    def disable_setting(self):
-        self.rd_btn_2D.setEnabled(False)
-        self.rd_btn_3D.setEnabled(False)
-        self.rd_btn_black.setEnabled(False) 
-        self.rd_btn_white.setEnabled(False)
-        self.rd_btn_bins.setEnabled(False)
-        self.rd_btn_physical.setEnabled(False)
-        
-    
-    def enable_setting(self):
-        self.rd_btn_2D.setEnabled(True)
-        self.rd_btn_3D.setEnabled(True)
-        self.rd_btn_black.setEnabled(True) 
-        self.rd_btn_white.setEnabled(True)
-        self.rd_btn_bins.setEnabled(True)
-        self.rd_btn_physical.setEnabled(True)
+    def set_settings_enabeld(self, enable: bool):
+        for w in self.setting_widgets:
+            w.setEnabled(enable)
     
     
     def on_apply_clicked(self):
@@ -147,7 +153,7 @@ class MainWindow(QMainWindow):
     
     def on_run_plot_clicked(self):
         self.add_plots()
-        self.disable_setting()
+        self.set_settings_enabeld(False)
         if self.canvas == None: return
         self.canvas.on_run_triggered()
         
@@ -155,7 +161,7 @@ class MainWindow(QMainWindow):
     def on_stop_plot_clicked(self):
         self.canvas.on_stop_triggered()
         self.canvas = None
-        self.enable_setting()
+        self.set_settings_enabeld(True)
     
     
     def on_plot_fullscreen_triggered(self):
@@ -163,6 +169,11 @@ class MainWindow(QMainWindow):
         if self.canvas == None: return
         self.plot_full_screen_popup = PlotFullscreenPopup(self.main_frame, self.canvas_frame)
     
+    def on_clim_value_changed(self):
+        c_max = self.sp_box_max_clim.value()
+        c_min = self.sp_box_min_clim.value()
+        
+        self.state.plot_mode["Clim"] = [c_min, c_max]
         
     def on_plot_setting_changed(self):
         if self.rd_btn_2D.isChecked():

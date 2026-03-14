@@ -11,7 +11,8 @@ import random
 import numpy as np
 import pyvista as pv
 
-from pyvistaqt import QtInteractor
+
+from pyvistaqt import QtInteractor, BackgroundPlotter
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 from PySide6.QtCore import QThread, Signal, Slot
 from matplotlib.backends.backend_qtagg import FigureCanvas
@@ -30,7 +31,7 @@ class PlotWidget(QWidget):
         self.canvas = None
         self.thread = None
         
-    
+        
     def remove_plots(self):
         if self.thread:
             self.thread.stop()
@@ -58,6 +59,7 @@ class PlotWidget(QWidget):
         self.canvas = QtInteractor(self)
         self.layout.addWidget(self.canvas.interactor)
         
+        
         self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
                                                  self.state.radar.n_ramps)
         
@@ -69,54 +71,85 @@ class PlotWidget(QWidget):
         
         if self.state.plot_mode["RDM"] == "3D":
             
-            if self.state.plot_mode["Axis Ticks"] == "bins" :
-            
-                self.x = np.linspace(-self.state.radar.n_ramps//2, self.state.radar.n_ramps//2, self.state.radar.n_ramps)
-                self.y = np.linspace(0, self.state.radar.n_sample//2, self.state.radar.n_sample//2)
-                self.x, self.y = np.meshgrid(self.x, self.y)
-            
-            elif self.state.plot_mode["Axis Ticks"] == "physical" :
-
-                self.x = np.linspace(-self.state.radar.V_max, self.state.radar.V_max, self.state.fmcw_settings["n_ramps"])
-                self.y = np.linspace(0, self.state.radar.R_max, self.state.fmcw_settings["n_sample"])
-
-                self.x, self.y = np.meshgrid(self.x, self.y)
+            self.x = np.linspace(-self.state.radar.n_ramps//2, self.state.radar.n_ramps//2, self.state.radar.n_ramps)
+            self.y = np.linspace(0, self.state.radar.n_sample//2, self.state.radar.n_sample//2)
+            self.x, self.y = np.meshgrid(self.x, self.y)
             
             self.grid = pv.StructuredGrid(self.x, self.y, self.z)
             self.grid.dimensions = (self.state.radar.n_ramps, self.state.radar.n_sample//2 , 1)
-            self.grid["scalars"] = self.z.ravel()
+            self.grid["Power dBfs"] = self.z.ravel()
             
             self.mesh_actor = self.canvas.add_mesh(self.grid, 
-                                                   scalars="scalars",
-                                                   cmap="inferno",
-                                                   clim=[-140,0]
-                                                   #show_edges=True
+                                                   scalars="Power dBfs",
+                                                   cmap="viridis",
+                                                   clim=self.state.plot_mode["Clim"],
+                                                   show_scalar_bar = True,
+                                                   scalar_bar_args= {
+                                                       "color" : self.state.plot_mode["Grid Color"],
+                                                       "vertical" : True
+                                                       },
                                                    )
-            
-            self.canvas.show_bounds(bounds=(0,self.state.radar.n_sample//2, -self.state.radar.n_ramps//2, self.state.radar.n_ramps//2, -140, 0))    
             
             self.canvas.reset_camera()
             self.canvas.camera_position = 'xz'
-            # [
-            #     (-512, -512, 0),  # camera location (look from negative X)
-            #     (0, 0, 0),    # focal point (center of grid)
-            #     (0, 0, 1)     # up direction
-            # ]
-            self.canvas.camera.view_angle = 30.0
-            self.canvas.camera.elevation = 45.0
+            self.canvas.add_camera_orientation_widget()
+            self.canvas.camera.view_angle = 40.0
+            self.canvas.camera.elevation = 50.0
+            self.canvas.camera.zoom(1.4)
             
-            self.canvas.show_grid(grid='back', location='outer',
-                                  bounds=[-self.state.radar.n_ramps//2,self.state.radar.n_ramps//2,
-                                          0,self.state.radar.R_max,
-                                          -160, 0],
-                                  fmt="%.f",
-                                  xtitle="Doppler bins",
-                                  ytitle="Range bins",
-                                  ztitle="Power in dBfs")
-            
-            print(self.state.radar.R_max)
+            ax_ranges = []
+            titles = []
+            if self.state.plot_mode["Axis Ticks"] == "bins" :
+                ax_ranges = [-self.state.radar.n_ramps//2,
+                             self.state.radar.n_ramps//2,
+                             0,
+                             self.state.radar.n_sample,
+                             0,
+                             -140
+                             ]
+                titles = [
+                    "Doppler bins",
+                    "Range bins",
+                    "Power in dBfs"]
+            elif self.state.plot_mode["Axis Ticks"] == "physical" :
+                ax_ranges = [-self.state.radar.V_max,
+                             self.state.radar.V_max,
+                             0,
+                             self.state.radar.R_max,
+                             0,
+                             -140
+                             ]
+                titles = [
+                    "Velocity in m/s",
+                    "Range in m",
+                    "Power in dBfs"]
+                
+            self.canvas.show_bounds(
+                grid = 'back',
+                location = 'outer',
+                axes_ranges=ax_ranges,
+                bounds = [-self.state.radar.n_ramps//2, 
+                          self.state.radar.n_ramps//2,
+                          0,
+                          self.state.radar.n_sample//2,
+                          -140,
+                          0
+                          ],
+                color=self.state.plot_mode["Grid Color"],
+                n_ylabels= 4,
+                n_zlabels= 5,
+                ticks = 'both',
+                xtitle = titles[0],
+                ytitle = titles[1],
+                ztitle = titles[2],
+                show_zlabels = False,
+                minor_ticks = False,
+                padding = 0.0,
+                fmt = "{:.0f}"
+                )
+
+   
             self.canvas.set_background(color=self.state.plot_mode["Background Color"])
-            self.canvas.show_grid(color=self.state.plot_mode["Grid Color"])
         
         elif self.state.plot_mode["RDM"] == "2D":
 
@@ -150,7 +183,7 @@ class PlotWidget(QWidget):
     def update_surface(self, new_z):
         """Update the surface mesh with new Z values"""
         if self.state.plot_mode["RDM"] == "3D":
-            self.grid["scalars"] = new_z.ravel()
+            self.grid["Power dBfs"] = new_z.ravel()
             points = np.c_[self.x.ravel(), self.y.ravel(), new_z.ravel()]
             self.grid.points = points
             self.mesh_actor.mapper.dataset.points = points

@@ -20,8 +20,8 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
     QFrame, QGridLayout, QGroupBox, QHBoxLayout,
     QLabel, QLineEdit, QMainWindow, QMenu,
     QMenuBar, QPushButton, QRadioButton, QScrollArea,
-    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
-    QVBoxLayout, QWidget)
+    QSizePolicy, QSpacerItem, QSpinBox, QStatusBar,
+    QTabWidget, QVBoxLayout, QWidget)
 
 from app.widgets.box_drone import BoxDrone
 from app.widgets.box_pedestrian import BoxPedestrian
@@ -667,6 +667,51 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_6.addWidget(self.groupBox_5)
 
+        self.gridLayout_5 = QGridLayout()
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.spinMinClimBox = QSpinBox(self.verticalLayoutWidget_4)
+        self.spinMinClimBox.setObjectName(u"spinMinClimBox")
+        self.spinMinClimBox.setMinimum(-160)
+        self.spinMinClimBox.setMaximum(20)
+        self.spinMinClimBox.setValue(-120)
+
+        self.gridLayout_5.addWidget(self.spinMinClimBox, 0, 2, 1, 1)
+
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_5.addItem(self.horizontalSpacer_6, 0, 1, 1, 1)
+
+        self.spinMaxClimBox = QSpinBox(self.verticalLayoutWidget_4)
+        self.spinMaxClimBox.setObjectName(u"spinMaxClimBox")
+        self.spinMaxClimBox.setMinimum(-160)
+        self.spinMaxClimBox.setMaximum(20)
+        self.spinMaxClimBox.setValue(-35)
+
+        self.gridLayout_5.addWidget(self.spinMaxClimBox, 0, 4, 1, 1)
+
+        self.label_31 = QLabel(self.verticalLayoutWidget_4)
+        self.label_31.setObjectName(u"label_31")
+
+        self.gridLayout_5.addWidget(self.label_31, 0, 3, 1, 1)
+
+        self.label_32 = QLabel(self.verticalLayoutWidget_4)
+        self.label_32.setObjectName(u"label_32")
+
+        self.gridLayout_5.addWidget(self.label_32, 0, 5, 1, 1)
+
+        self.label_28 = QLabel(self.verticalLayoutWidget_4)
+        self.label_28.setObjectName(u"label_28")
+
+        self.gridLayout_5.addWidget(self.label_28, 0, 0, 1, 1)
+
+        self.label_33 = QLabel(self.verticalLayoutWidget_4)
+        self.label_33.setObjectName(u"label_33")
+
+        self.gridLayout_5.addWidget(self.label_33, 0, 6, 1, 1)
+
+
+        self.verticalLayout_6.addLayout(self.gridLayout_5)
+
         self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_6.addItem(self.verticalSpacer_4)
@@ -809,6 +854,10 @@ class Ui_MainWindow(object):
         self.label_27.setText("")
         self.radioButton_black.setText(QCoreApplication.translate("MainWindow", u"black", None))
         self.radioButton_white.setText(QCoreApplication.translate("MainWindow", u"white", None))
+        self.label_31.setText(QCoreApplication.translate("MainWindow", u"min", None))
+        self.label_32.setText(QCoreApplication.translate("MainWindow", u"max", None))
+        self.label_28.setText(QCoreApplication.translate("MainWindow", u"Clim", None))
+        self.label_33.setText(QCoreApplication.translate("MainWindow", u"dBfs", None))
         self.runPlotButton.setText(QCoreApplication.translate("MainWindow", u"Run", None))
         self.stopPlotButton.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Window", None))

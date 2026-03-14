@@ -59,7 +59,7 @@ class FMCWRadar:
 
         # Performance parameter
         self.R_max = self.c/(2*self.f_BW) * self.n_sample
-        self.V_max = (self.wavelength/(2 * self.t_pri))
+        self.V_max = (self.wavelength/(4 * self.t_pri))
 
 
     def set_chirp_parameters(self, chirp_param:dict ):
