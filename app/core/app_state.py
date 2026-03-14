@@ -44,13 +44,11 @@ class AppState(QObject):
         "v_max" : self.radar.V_max
         }
         
-        
-        
         # Plot - Settings
         self.plot_mode = {
             "RDM": "2D",
             "Background Color": "black",
-            "Grid Color": "black",
+            "Grid Color": "white",
             "Axis Ticks": "bins",
             "Clim" : [-120, -35]
             }

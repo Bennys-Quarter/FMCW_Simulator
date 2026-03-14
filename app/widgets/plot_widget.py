@@ -69,6 +69,40 @@ class PlotWidget(QWidget):
         self.z = rdm 
         self.z = 10*np.log10(np.abs(rdm)**2)
         
+        titles = []
+        ax_ranges = []
+        if self.state.plot_mode["Axis Ticks"] == "bins" :
+            ax_ranges = [-self.state.radar.n_ramps//2,
+                         self.state.radar.n_ramps//2,
+                         0,
+                         self.state.radar.n_sample//2,
+                         0,
+                         -140
+                         ]
+            titles = [
+                "Doppler bins",
+                "Range bins",
+                "Power in dBfs"]
+        elif self.state.plot_mode["Axis Ticks"] == "physical" :
+            ax_ranges = [-self.state.radar.V_max,
+                         self.state.radar.V_max,
+                         0,
+                         self.state.radar.R_max,
+                         0,
+                         -140
+                         ]
+            titles = [
+                "Velocity in m/s",
+                "Range in m",
+                "Power in dBfs"]
+            
+        self.canvas.add_text(
+                "Range Doppler Map",
+                position="upper_edge",
+                font_size=18,
+                color=self.state.plot_mode["Grid Color"],
+            )
+        
         if self.state.plot_mode["RDM"] == "3D":
             
             self.x = np.linspace(-self.state.radar.n_ramps//2, self.state.radar.n_ramps//2, self.state.radar.n_ramps)
@@ -96,34 +130,7 @@ class PlotWidget(QWidget):
             self.canvas.camera.view_angle = 40.0
             self.canvas.camera.elevation = 50.0
             self.canvas.camera.zoom(1.4)
-            
-            ax_ranges = []
-            titles = []
-            if self.state.plot_mode["Axis Ticks"] == "bins" :
-                ax_ranges = [-self.state.radar.n_ramps//2,
-                             self.state.radar.n_ramps//2,
-                             0,
-                             self.state.radar.n_sample,
-                             0,
-                             -140
-                             ]
-                titles = [
-                    "Doppler bins",
-                    "Range bins",
-                    "Power in dBfs"]
-            elif self.state.plot_mode["Axis Ticks"] == "physical" :
-                ax_ranges = [-self.state.radar.V_max,
-                             self.state.radar.V_max,
-                             0,
-                             self.state.radar.R_max,
-                             0,
-                             -140
-                             ]
-                titles = [
-                    "Velocity in m/s",
-                    "Range in m",
-                    "Power in dBfs"]
-                
+                          
             self.canvas.show_bounds(
                 grid = 'back',
                 location = 'outer',
@@ -148,13 +155,14 @@ class PlotWidget(QWidget):
                 fmt = "{:.0f}"
                 )
 
-   
             self.canvas.set_background(color=self.state.plot_mode["Background Color"])
+            
         
         elif self.state.plot_mode["RDM"] == "2D":
 
             dy = self.state.radar.n_ramps
-            dx = self.state.radar.n_sample//2
+            dx = self.state.radar.n_sample
+
             
             self.grid = pv.ImageData(
                 dimensions=(self.state.radar.n_sample//2, self.state.radar.n_ramps, 1),
@@ -169,11 +177,40 @@ class PlotWidget(QWidget):
                 self.grid,
                 scalars="Power (dB)",
                 cmap="viridis",
-                scalar_bar_args={"title": "Power in dB"}
+                show_scalar_bar = True,
+                clim=self.state.plot_mode["Clim"],
+                scalar_bar_args={
+                    "title": "Power in dBfs",
+                    "color" : self.state.plot_mode["Grid Color"],
+                    "position_y" : 0.02
+                    }
             )
-        
+            
+            self.canvas.show_bounds(
+                n_ylabels= 5,
+                n_xlabels= 4,
+                axes_ranges=[
+                    ax_ranges[2], 
+                    ax_ranges[3], 
+                    ax_ranges[0],
+                    ax_ranges[1], 
+                    0,0],
+                color=self.state.plot_mode["Grid Color"],
+                xtitle = titles[1],
+                ytitle = titles[0],
+                minor_ticks = True,
+                fmt = "{:.0f}",
+                use_3d_text = False,
+                )
+            
+            self.canvas.set_background(color=self.state.plot_mode["Background Color"])
+            
+            #self.canvas.camera.tight()
             self.canvas.view_yx()  # top-down 2D view
+            self.canvas.camera.zoom(1.1)
             self.canvas.enable_parallel_projection()  # optional for 2D style
+        
+
         
         self.thread = UpdateThread(self.x, self.y)
         self.thread.data_updated.connect(self.update_surface)
@@ -194,9 +231,7 @@ class PlotWidget(QWidget):
             self.grid.point_data["Power (dB)"] = new_z.flatten(order="F")
     
             # Tell VTK the data has changed
-            self.mesh_actor.mapper.scalar_range = (self.grid.point_data["Power (dB)"].min(),
-                                              self.grid.point_data["Power (dB)"].max())
-            self.grid.Modified()       # mark the dataset as modified
+            self.grid.Modified()      # mark the dataset as modified
             self.canvas.render()      # update the display
 
 

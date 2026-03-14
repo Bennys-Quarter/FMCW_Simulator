@@ -169,11 +169,13 @@ class MainWindow(QMainWindow):
         if self.canvas == None: return
         self.plot_full_screen_popup = PlotFullscreenPopup(self.main_frame, self.canvas_frame)
     
+    
     def on_clim_value_changed(self):
         c_max = self.sp_box_max_clim.value()
         c_min = self.sp_box_min_clim.value()
         
         self.state.plot_mode["Clim"] = [c_min, c_max]
+        
         
     def on_plot_setting_changed(self):
         if self.rd_btn_2D.isChecked():
