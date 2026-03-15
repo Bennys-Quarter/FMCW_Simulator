@@ -571,13 +571,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_6.addWidget(self.label_24)
 
-        self.line_7 = QFrame(self.verticalLayoutWidget_4)
-        self.line_7.setObjectName(u"line_7")
-        self.line_7.setFrameShape(QFrame.Shape.HLine)
-        self.line_7.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_6.addWidget(self.line_7)
-
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.groupBox_3 = QGroupBox(self.verticalLayoutWidget_4)
         self.groupBox_3.setObjectName(u"groupBox_3")
         self.groupBox_3.setMinimumSize(QSize(0, 50))
@@ -604,36 +599,7 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addWidget(self.label_26, 0, 0, 1, 1)
 
 
-        self.verticalLayout_6.addWidget(self.groupBox_3)
-
-        self.groupBox_4 = QGroupBox(self.verticalLayoutWidget_4)
-        self.groupBox_4.setObjectName(u"groupBox_4")
-        self.groupBox_4.setMinimumSize(QSize(0, 50))
-        self.gridLayoutWidget_3 = QWidget(self.groupBox_4)
-        self.gridLayoutWidget_3.setObjectName(u"gridLayoutWidget_3")
-        self.gridLayoutWidget_3.setGeometry(QRect(8, 20, 291, 31))
-        self.gridLayout_3 = QGridLayout(self.gridLayoutWidget_3)
-        self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.radioButton_physical = QRadioButton(self.gridLayoutWidget_3)
-        self.radioButton_physical.setObjectName(u"radioButton_physical")
-        self.radioButton_physical.setChecked(True)
-
-        self.gridLayout_3.addWidget(self.radioButton_physical, 0, 2, 1, 1)
-
-        self.radioButton_bins = QRadioButton(self.gridLayoutWidget_3)
-        self.radioButton_bins.setObjectName(u"radioButton_bins")
-        self.radioButton_bins.setChecked(False)
-
-        self.gridLayout_3.addWidget(self.radioButton_bins, 0, 1, 1, 1)
-
-        self.label_29 = QLabel(self.gridLayoutWidget_3)
-        self.label_29.setObjectName(u"label_29")
-
-        self.gridLayout_3.addWidget(self.label_29, 0, 0, 1, 1)
-
-
-        self.verticalLayout_6.addWidget(self.groupBox_4)
+        self.verticalLayout_2.addWidget(self.groupBox_3)
 
         self.groupBox_5 = QGroupBox(self.verticalLayoutWidget_4)
         self.groupBox_5.setObjectName(u"groupBox_5")
@@ -667,7 +633,46 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.radioButton_white, 0, 1, 1, 1)
 
 
-        self.verticalLayout_6.addWidget(self.groupBox_5)
+        self.verticalLayout_2.addWidget(self.groupBox_5)
+
+        self.groupBox_4 = QGroupBox(self.verticalLayoutWidget_4)
+        self.groupBox_4.setObjectName(u"groupBox_4")
+        self.groupBox_4.setMinimumSize(QSize(0, 50))
+        self.gridLayoutWidget_3 = QWidget(self.groupBox_4)
+        self.gridLayoutWidget_3.setObjectName(u"gridLayoutWidget_3")
+        self.gridLayoutWidget_3.setGeometry(QRect(8, 20, 291, 31))
+        self.gridLayout_3 = QGridLayout(self.gridLayoutWidget_3)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.radioButton_physical = QRadioButton(self.gridLayoutWidget_3)
+        self.radioButton_physical.setObjectName(u"radioButton_physical")
+        self.radioButton_physical.setChecked(True)
+
+        self.gridLayout_3.addWidget(self.radioButton_physical, 0, 2, 1, 1)
+
+        self.radioButton_bins = QRadioButton(self.gridLayoutWidget_3)
+        self.radioButton_bins.setObjectName(u"radioButton_bins")
+        self.radioButton_bins.setChecked(False)
+
+        self.gridLayout_3.addWidget(self.radioButton_bins, 0, 1, 1, 1)
+
+        self.label_29 = QLabel(self.gridLayoutWidget_3)
+        self.label_29.setObjectName(u"label_29")
+
+        self.gridLayout_3.addWidget(self.label_29, 0, 0, 1, 1)
+
+
+        self.verticalLayout_2.addWidget(self.groupBox_4)
+
+
+        self.verticalLayout_6.addLayout(self.verticalLayout_2)
+
+        self.line_7 = QFrame(self.verticalLayoutWidget_4)
+        self.line_7.setObjectName(u"line_7")
+        self.line_7.setFrameShape(QFrame.Shape.HLine)
+        self.line_7.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_6.addWidget(self.line_7)
 
         self.gridLayout_5 = QGridLayout()
         self.gridLayout_5.setObjectName(u"gridLayout_5")
@@ -781,6 +786,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.tabWidget.setCurrentIndex(4)
+        self.plotLayoutSelector.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -840,22 +846,23 @@ class Ui_MainWindow(object):
         self.label_23.setText(QCoreApplication.translate("MainWindow", u"View", None))
         self.label_25.setText(QCoreApplication.translate("MainWindow", u"Selection", None))
         self.plotLayoutSelector.setItemText(0, QCoreApplication.translate("MainWindow", u"RD-Map", None))
-        self.plotLayoutSelector.setItemText(1, QCoreApplication.translate("MainWindow", u"Combo", None))
+        self.plotLayoutSelector.setItemText(1, QCoreApplication.translate("MainWindow", u"Signals", None))
 
+        self.plotLayoutSelector.setCurrentText(QCoreApplication.translate("MainWindow", u"RD-Map", None))
         self.label_24.setText(QCoreApplication.translate("MainWindow", u"Plot", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"RD Map", None))
         self.radioButton_3D.setText(QCoreApplication.translate("MainWindow", u"3D", None))
         self.radioButton_2D.setText(QCoreApplication.translate("MainWindow", u"2D", None))
         self.label_26.setText(QCoreApplication.translate("MainWindow", u"Dimension", None))
-        self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Axis", None))
-        self.radioButton_physical.setText(QCoreApplication.translate("MainWindow", u"physical", None))
-        self.radioButton_bins.setText(QCoreApplication.translate("MainWindow", u"bins", None))
-        self.label_29.setText(QCoreApplication.translate("MainWindow", u"Ticks Lables", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("MainWindow", u"Visuals", None))
         self.label_30.setText(QCoreApplication.translate("MainWindow", u"Background", None))
         self.label_27.setText("")
         self.radioButton_black.setText(QCoreApplication.translate("MainWindow", u"black", None))
         self.radioButton_white.setText(QCoreApplication.translate("MainWindow", u"white", None))
+        self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Axis", None))
+        self.radioButton_physical.setText(QCoreApplication.translate("MainWindow", u"physical", None))
+        self.radioButton_bins.setText(QCoreApplication.translate("MainWindow", u"bins", None))
+        self.label_29.setText(QCoreApplication.translate("MainWindow", u"Ticks Lables", None))
         self.label_31.setText(QCoreApplication.translate("MainWindow", u"min", None))
         self.label_32.setText(QCoreApplication.translate("MainWindow", u"max", None))
         self.label_28.setText(QCoreApplication.translate("MainWindow", u"Clim", None))

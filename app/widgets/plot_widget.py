@@ -12,7 +12,7 @@ import numpy as np
 import pyvista as pv
 
 
-from pyvistaqt import QtInteractor, BackgroundPlotter
+from pyvistaqt import QtInteractor
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 from PySide6.QtCore import QThread, Signal, Slot
 from matplotlib.backends.backend_qtagg import FigureCanvas
@@ -30,6 +30,11 @@ class PlotWidget(QWidget):
         
         self.canvas = None
         self.thread = None
+        
+        self.plots = {
+            "RD-Map": [self.draw_RD_map],
+            "Signals": [self.draw_chirp, self.draw_mixed_signal, self.draw_range_fft, self.draw_doppler_fft]
+                }
         
         
     def remove_plots(self):
@@ -54,35 +59,26 @@ class PlotWidget(QWidget):
         self.layout.addWidget(self.canvas)
         self.canvas.draw()
         
-    
-    def prepare_plot_widget(self, option:str = "RDM"):
-        """
-        Draw radar plots depending on the settings in the plot window
-        
-        option:
-            - RDM : Plots a single range doppler map
-            - Signals : Plot a the signal result after each processing step 
-        Returns
-        -------
-        None.
 
-        """
-        
-        if option == "RD-Map":
-            self.layout = QVBoxLayout(self)
-            self.draw_RD_map()
-            self.layout.addWidget(self.canvas.interactor)
-        elif option == "Signals":
-            pass
-        
-    
     def draw_chirp(self):
-        pass
+        self.canvas = QtInteractor(self)
+        self.canvas.set_background(color=self.state.plot_mode["Background Color"])
+        
     
+    def draw_mixed_signal(self):
+        self.canvas = QtInteractor(self)
+        self.canvas.set_background(color="red")
+        
     
-    def draw_
+    def draw_range_fft(self):
+        self.canvas = QtInteractor(self)
+        self.canvas.set_background(color="blue")
+        
     
-
+    def draw_doppler_fft(self):
+        self.canvas = QtInteractor(self)
+        self.canvas.set_background(color="green")
+        
 
     def draw_RD_map(self):
         self.canvas = QtInteractor(self)
@@ -261,9 +257,27 @@ class PlotWidget(QWidget):
             self.canvas.render()      # update the display
 
 
-    def on_run_triggered(self):
+    def prepeare_plots(self, option:str, plt_idx:int):
+        """
+        Draw radar plots depending on the settings in the plot window
+        
+        option:
+            - RDM : Plots a single range doppler map
+            - Signals : Plot a the signal result after each processing step 
+        Returns
+        -------
+        None.
+
+        """
+        
         self.remove_plots()
-        self.prepare_plot_widget(option = self.state.plot_mode["Window"])
+        
+        self.layout = QVBoxLayout(self)
+        
+        plt = self.plots[option][plt_idx]
+
+        plt()
+        self.layout.addWidget(self.canvas.interactor)
 
 
     def on_stop_triggered(self):

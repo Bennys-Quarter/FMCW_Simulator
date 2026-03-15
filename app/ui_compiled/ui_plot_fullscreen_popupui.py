@@ -39,8 +39,8 @@ class Ui_PlotFullScreenPopup(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.closeButton.sizePolicy().hasHeightForWidth())
         self.closeButton.setSizePolicy(sizePolicy)
-        self.closeButton.setMinimumSize(QSize(40, 40))
-        self.closeButton.setMaximumSize(QSize(40, 40))
+        self.closeButton.setMinimumSize(QSize(20, 20))
+        self.closeButton.setMaximumSize(QSize(20, 20))
 
         self.horizontalLayout.addWidget(self.closeButton)
 

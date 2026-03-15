@@ -12,7 +12,7 @@ from app.widgets.box_drone import BoxDrone
 from app.widgets.box_pedestrian import BoxPedestrian
 from app.widgets.box_truck import BoxTruck
 from app.widgets.plot_widget import PlotWidget
-from app.widgets.plot_format_1_2 import PlotFormat_1_2
+from app.widgets.plot_format_2_2 import PlotFormat_2_2
 from app.widgets.plot_format_single import PlotFormatSingle
 from app.widgets.plot_fullscreen_popup import PlotFullscreenPopup
 
@@ -126,10 +126,19 @@ class MainWindow(QMainWindow):
             if widget is not None:
                 widget.deleteLater()
         
-        new_entry = PlotFormatSingle()
-        layout.insertWidget(0, new_entry)
-        
-        self.canvas = new_entry.findChild(PlotWidget, "plotWidget")
+        if self.state.plot_mode["Window"] == "RD-Map":
+            new_entry = PlotFormatSingle()
+            layout.insertWidget(0, new_entry)
+            self.canvas = [new_entry.findChild(PlotWidget, "plotWidget")]
+        if self.state.plot_mode["Window"] == "Signals":
+            new_entry = PlotFormat_2_2()
+            layout.insertWidget(0, new_entry)
+            self.canvas = [
+                new_entry.findChild(PlotWidget, "plotWidget1"),
+                new_entry.findChild(PlotWidget, "plotWidget2"),
+                new_entry.findChild(PlotWidget, "plotWidget3"),
+                new_entry.findChild(PlotWidget, "plotWidget4"),
+                ]
     
     
     def set_settings_enabeld(self, enable: bool):
@@ -158,11 +167,14 @@ class MainWindow(QMainWindow):
         self.add_plots()
         self.set_settings_enabeld(False)
         if self.canvas == None: return
-        self.canvas.on_run_triggered()
+        
+        for i, cnv in enumerate(self.canvas):
+            cnv.prepeare_plots(option = self.state.plot_mode["Window"], plt_idx=i)
         
         
     def on_stop_plot_clicked(self):
-        self.canvas.on_stop_triggered()
+        for cnv in self.canvas:
+            cnv.on_stop_triggered()
         self.canvas = None
         self.set_settings_enabeld(True)
     

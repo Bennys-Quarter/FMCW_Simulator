@@ -818,6 +818,12 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="currentText">
+                   <string>RD-Map</string>
+                  </property>
+                  <property name="currentIndex">
+                   <number>0</number>
+                  </property>
                   <item>
                    <property name="text">
                     <string>RD-Map</string>
@@ -825,7 +831,7 @@
                   </item>
                   <item>
                    <property name="text">
-                    <string>Combo</string>
+                    <string>Signals</string>
                    </property>
                   </item>
                  </widget>
@@ -845,170 +851,174 @@
                </widget>
               </item>
               <item>
+               <layout class="QVBoxLayout" name="verticalLayout_2">
+                <item>
+                 <widget class="QGroupBox" name="groupBox_3">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="title">
+                   <string>RD Map</string>
+                  </property>
+                  <widget class="QWidget" name="gridLayoutWidget_2">
+                   <property name="geometry">
+                    <rect>
+                     <x>10</x>
+                     <y>20</y>
+                     <width>291</width>
+                     <height>31</height>
+                    </rect>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_2">
+                    <item row="0" column="2">
+                     <widget class="QRadioButton" name="radioButton_3D">
+                      <property name="text">
+                       <string>3D</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QRadioButton" name="radioButton_2D">
+                      <property name="text">
+                       <string>2D</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_26">
+                      <property name="text">
+                       <string>Dimension</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_5">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="title">
+                   <string>Visuals</string>
+                  </property>
+                  <widget class="QWidget" name="gridLayoutWidget_4">
+                   <property name="geometry">
+                    <rect>
+                     <x>10</x>
+                     <y>20</y>
+                     <width>291</width>
+                     <height>51</height>
+                    </rect>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_4">
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_30">
+                      <property name="text">
+                       <string>Background</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="label_27">
+                      <property name="text">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="2">
+                     <widget class="QRadioButton" name="radioButton_black">
+                      <property name="text">
+                       <string>black</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QRadioButton" name="radioButton_white">
+                      <property name="text">
+                       <string>white</string>
+                      </property>
+                      <property name="checked">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_4">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="title">
+                   <string>Axis</string>
+                  </property>
+                  <widget class="QWidget" name="gridLayoutWidget_3">
+                   <property name="geometry">
+                    <rect>
+                     <x>8</x>
+                     <y>20</y>
+                     <width>291</width>
+                     <height>31</height>
+                    </rect>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_3">
+                    <item row="0" column="2">
+                     <widget class="QRadioButton" name="radioButton_physical">
+                      <property name="text">
+                       <string>physical</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QRadioButton" name="radioButton_bins">
+                      <property name="text">
+                       <string>bins</string>
+                      </property>
+                      <property name="checked">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_29">
+                      <property name="text">
+                       <string>Ticks Lables</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
                <widget class="Line" name="line_7">
                 <property name="orientation">
                  <enum>Qt::Orientation::Horizontal</enum>
                 </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox_3">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>50</height>
-                 </size>
-                </property>
-                <property name="title">
-                 <string>RD Map</string>
-                </property>
-                <widget class="QWidget" name="gridLayoutWidget_2">
-                 <property name="geometry">
-                  <rect>
-                   <x>10</x>
-                   <y>20</y>
-                   <width>291</width>
-                   <height>31</height>
-                  </rect>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_2">
-                  <item row="0" column="2">
-                   <widget class="QRadioButton" name="radioButton_3D">
-                    <property name="text">
-                     <string>3D</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QRadioButton" name="radioButton_2D">
-                    <property name="text">
-                     <string>2D</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_26">
-                    <property name="text">
-                     <string>Dimension</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox_4">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>50</height>
-                 </size>
-                </property>
-                <property name="title">
-                 <string>Axis</string>
-                </property>
-                <widget class="QWidget" name="gridLayoutWidget_3">
-                 <property name="geometry">
-                  <rect>
-                   <x>8</x>
-                   <y>20</y>
-                   <width>291</width>
-                   <height>31</height>
-                  </rect>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_3">
-                  <item row="0" column="2">
-                   <widget class="QRadioButton" name="radioButton_physical">
-                    <property name="text">
-                     <string>physical</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QRadioButton" name="radioButton_bins">
-                    <property name="text">
-                     <string>bins</string>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_29">
-                    <property name="text">
-                     <string>Ticks Lables</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox_5">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>50</height>
-                 </size>
-                </property>
-                <property name="title">
-                 <string>Visuals</string>
-                </property>
-                <widget class="QWidget" name="gridLayoutWidget_4">
-                 <property name="geometry">
-                  <rect>
-                   <x>10</x>
-                   <y>20</y>
-                   <width>291</width>
-                   <height>51</height>
-                  </rect>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_4">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_30">
-                    <property name="text">
-                     <string>Background</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_27">
-                    <property name="text">
-                     <string/>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="2">
-                   <widget class="QRadioButton" name="radioButton_black">
-                    <property name="text">
-                     <string>black</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QRadioButton" name="radioButton_white">
-                    <property name="text">
-                     <string>white</string>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
                </widget>
               </item>
               <item>
