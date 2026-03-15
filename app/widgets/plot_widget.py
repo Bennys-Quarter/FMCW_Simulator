@@ -33,7 +33,7 @@ class PlotWidget(QWidget):
         
         self.plots = {
             "RD-Map": [self.draw_RD_map],
-            "Signals": [self.draw_chirp, self.draw_mixed_signal, self.draw_range_fft, self.draw_doppler_fft]
+            "Signals": [ self.draw_chirp, self.draw_mixed_signal, self.draw_range_fft ,  self.draw_doppler_fft]
                 }
         
         
@@ -55,29 +55,46 @@ class PlotWidget(QWidget):
 
     def draw_transmitt_chirp(self):
         self.fig = self.state.radar.plot_transmit_chirp()
-        self.canvas = FigureCanvas(self.fig)
-        self.layout.addWidget(self.canvas)
-        self.canvas.draw()
+        plt = FigureCanvas(self.fig)
+        self.layout.addWidget(plt)
         
 
     def draw_chirp(self):
-        self.canvas = QtInteractor(self)
-        self.canvas.set_background(color=self.state.plot_mode["Background Color"])
+        raw_data = self.state.radar.get_radar_scan()
+        fig1, fig2 = self.state.radar.plot_raw_data(raw_data)
+        plt = FigureCanvas(fig1)
+        self.layout.addWidget(plt)
         
-    
+        
     def draw_mixed_signal(self):
-        self.canvas = QtInteractor(self)
-        self.canvas.set_background(color="red")
+        self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
+                                                 self.state.radar.n_ramps)
+        raw_data = self.state.radar.get_radar_scan()
+        self.state.processor.process_frame(raw_data, case=2)
+        fig_range = self.state.processor.plot_range_fft(disp="NCI")
+        plt = FigureCanvas(fig_range)
+        self.layout.addWidget(plt)
         
     
     def draw_range_fft(self):
-        self.canvas = QtInteractor(self)
-        self.canvas.set_background(color="blue")
+        self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
+                                                 self.state.radar.n_ramps)
+        raw_data = self.state.radar.get_radar_scan()
+        self.state.processor.process_frame(raw_data, case=2)
+        fig_range = self.state.processor.plot_range_fft(disp="CFAR")
+        plt = FigureCanvas(fig_range)
+        self.layout.addWidget(plt)
+        #self.canvas.draw()
         
     
     def draw_doppler_fft(self):
-        self.canvas = QtInteractor(self)
-        self.canvas.set_background(color="green")
+        self.state.processor.set_data_cube_shape(self.state.radar.n_sample, self.state.radar.n_ramps)
+        raw_data = self.state.radar.get_radar_scan()
+        self.state.processor.process_frame(raw_data, case=2)
+        fig_doppler = self.state.processor.plot_doppler_fft()
+        plt = FigureCanvas(fig_doppler)
+        self.layout.addWidget(plt)
+        #self.canvas.draw()
         
 
     def draw_RD_map(self):
@@ -277,7 +294,7 @@ class PlotWidget(QWidget):
         plt = self.plots[option][plt_idx]
 
         plt()
-        self.layout.addWidget(self.canvas.interactor)
+        #self.layout.addWidget(self.canvas.interactor)
 
 
     def on_stop_triggered(self):
