@@ -60,41 +60,154 @@ class PlotWidget(QWidget):
         
 
     def draw_chirp(self):
-        raw_data = self.state.radar.get_radar_scan()
-        fig1, fig2 = self.state.radar.plot_raw_data(raw_data)
-        plt = FigureCanvas(fig1)
-        self.layout.addWidget(plt)
+        self.canvas = QtInteractor(self)
+        self.layout.addWidget(self.canvas.interactor)
         
+        x = np.linspace(0, 10, 100)
+        y = np.sin(x)
+        
+        raw_data = self.state.radar.get_radar_scan()
+        
+        t = self.state.radar.t
+        n_sample = self.state.radar.n_sample
+        
+        scale = 3
+        n_chirps = 4
+        
+        x_min = t[0]
+        x_max = t[n_sample * n_chirps : n_sample + n_sample * n_chirps]*1e6
+        x_max = x_max[-1]
+        
+        lines = []
+        for i in range(n_chirps):
+            x = t[n_sample * i : n_sample + n_sample * i]*1e6
+            y = raw_data[n_sample * i : n_sample + n_sample * i]*1e3 * scale
+        
+            points = np.column_stack((x, y, np.zeros_like(x)))
+            lines.append(pv.lines_from_points(points))
+        
+        self.canvas.add_mesh(lines[0], color="red", line_width=3)
+        self.canvas.add_mesh(lines[1], color="blue", line_width=3)
+        self.canvas.add_mesh(lines[2], color="yellow", line_width=3)
+        self.canvas.add_mesh(lines[3], color="green", line_width=3)
+        self.canvas.view_xy()
+        self.canvas.show_bounds(
+              grid = 'back',
+              location = 'outer',
+              color=self.state.plot_mode["Grid Color"],
+              axes_ranges = [
+                  x_min, x_max,
+                  -1, 1,
+                  0, 0
+                  ],
+              bounds = [
+                  x_min, x_max,
+                  -1, 1,
+                  0, 0
+                  ],
+              xtitle = r"Time in \mu s",
+              ytitle = "Amplitude in W",
+              )
+        
+        self.canvas.add_text(
+                "Transmitted Chirps",
+                position="upper_edge",
+                font_size=10,
+                color=self.state.plot_mode["Grid Color"],
+            )
+        
+        self.canvas.reset_camera()
+        self.canvas.disable_anti_aliasing()
+        self.canvas.enable_parallel_projection()
+        self.canvas.camera_position = 'xy'
+        self.canvas.interactor.SetInteractorStyle(None)
+        
+        self.canvas.set_background(color=self.state.plot_mode["Background Color"])
+        
+
         
     def draw_mixed_signal(self):
-        self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
-                                                 self.state.radar.n_ramps)
-        raw_data = self.state.radar.get_radar_scan()
-        self.state.processor.process_frame(raw_data, case=2)
-        fig_range = self.state.processor.plot_range_fft(disp="NCI")
-        plt = FigureCanvas(fig_range)
-        self.layout.addWidget(plt)
+        self.canvas = QtInteractor(self)
+        self.layout.addWidget(self.canvas.interactor)
+        
+        x = np.linspace(0, 10, 100)
+        y = np.sin(x)
+        
+        points = np.column_stack((x, y, np.zeros_like(x)))
+        line = pv.lines_from_points(points)
+        
+        self.canvas.add_mesh(line, line_width=3)
+        self.canvas.view_xy()
+        self.canvas.show_bounds()
+        self.canvas.reset_camera()
+        
+        # self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
+        #                                          self.state.radar.n_ramps)
+        # raw_data = self.state.radar.get_radar_scan()
+        # self.state.processor.process_frame(raw_data, case=2)
+        # fig_range = self.state.processor.plot_range_fft(disp="NCI")
+        # plt = FigureCanvas(fig_range)
+        # self.layout.addWidget(plt)
         
     
     def draw_range_fft(self):
-        self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
-                                                 self.state.radar.n_ramps)
-        raw_data = self.state.radar.get_radar_scan()
-        self.state.processor.process_frame(raw_data, case=2)
-        fig_range = self.state.processor.plot_range_fft(disp="CFAR")
-        plt = FigureCanvas(fig_range)
-        self.layout.addWidget(plt)
-        #self.canvas.draw()
+        self.canvas = QtInteractor(self)
+        self.layout.addWidget(self.canvas.interactor)
+        
+        x = np.linspace(0, 10, 100)
+        y = np.sin(x)
+        
+        points = np.column_stack((x, y, np.zeros_like(x)))
+        line = pv.lines_from_points(points)
+        
+        self.canvas.add_mesh(line, line_width=3)
+        self.canvas.view_xy()
+        self.canvas.show_bounds()
+        self.canvas.reset_camera()
+        
+        # self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
+        #                                          self.state.radar.n_ramps)
+        # raw_data = self.state.radar.get_radar_scan()
+        # self.state.processor.process_frame(raw_data, case=2)
+        # fig_range = self.state.processor.plot_range_fft(disp="CFAR")
+        # plt = FigureCanvas(fig_range)
+        # self.layout.addWidget(plt)
+
         
     
     def draw_doppler_fft(self):
-        self.state.processor.set_data_cube_shape(self.state.radar.n_sample, self.state.radar.n_ramps)
-        raw_data = self.state.radar.get_radar_scan()
-        self.state.processor.process_frame(raw_data, case=2)
-        fig_doppler = self.state.processor.plot_doppler_fft()
-        plt = FigureCanvas(fig_doppler)
-        self.layout.addWidget(plt)
-        #self.canvas.draw()
+        self.canvas = QtInteractor(self)
+        self.layout.addWidget(self.canvas.interactor)
+        
+        x = np.linspace(0, 10, 100)
+        y = np.sin(x)
+        
+        points = np.column_stack((x, y, np.zeros_like(x)))
+        line = pv.lines_from_points(points)
+        
+        self.canvas.add_mesh(line, line_width=3)
+        self.canvas.view_xy()
+        self.canvas.show_bounds(
+              grid = 'back',
+              location = 'outer',
+              color=self.state.plot_mode["Grid Color"],
+              )
+        
+        self.canvas.reset_camera()
+        self.canvas.disable_anti_aliasing()
+        self.canvas.enable_parallel_projection()
+        self.canvas.camera_position = 'xy'
+        self.canvas.interactor.SetInteractorStyle(None)
+        
+        self.canvas.set_background(color=self.state.plot_mode["Background Color"])
+                
+        # self.state.processor.set_data_cube_shape(self.state.radar.n_sample, self.state.radar.n_ramps)
+        # raw_data = self.state.radar.get_radar_scan()
+        # self.state.processor.process_frame(raw_data, case=2)
+        # fig_doppler = self.state.processor.plot_doppler_fft()
+        # plt = FigureCanvas(fig_doppler)
+        # self.layout.addWidget(plt)
+
         
 
     def draw_RD_map(self):
