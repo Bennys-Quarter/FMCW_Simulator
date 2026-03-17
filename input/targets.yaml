@@ -2,7 +2,7 @@ targets:
   - id: 1
     name: "Test"
     rcs_dBsm: 15           # Radar Cross Section in dBsm
-    range_m: 30.0          # Range to the target in meters
+    range_m: 2.0          # Range to the target in meters
     velocity_mps: 16.0     # Relative velocity in m/s
     az_deg: 15.0           # Azimuth angle in degrees
     el_deg: 0              # Elevation angle in degrees

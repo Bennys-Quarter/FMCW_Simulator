@@ -13,6 +13,8 @@ from models.fmcw_radar import FMCWRadar
 from processing.fmcw_processing import FMCWSignalProcessor
 from file_handler import FileHandler
 
+import numpy as np
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     
@@ -35,8 +37,15 @@ if __name__ == "__main__":
     
     # 3. STEP Ploting
     
+    fig_raw = radar.plot_mixed_signal()
+    
     fig_range = processor.plot_range_fft(disp="NCI")
     
     fig_doppler = processor.plot_doppler_fft()
     
     fig_RD_map = processor.plot_RD_map(disp="3D")
+    
+
+    
+
+    

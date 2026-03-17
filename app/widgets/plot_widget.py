@@ -63,9 +63,6 @@ class PlotWidget(QWidget):
         self.canvas = QtInteractor(self)
         self.layout.addWidget(self.canvas.interactor)
         
-        x = np.linspace(0, 10, 100)
-        y = np.sin(x)
-        
         raw_data = self.state.radar.get_radar_scan()
         
         t = self.state.radar.t
@@ -136,42 +133,56 @@ class PlotWidget(QWidget):
         points = np.column_stack((x, y, np.zeros_like(x)))
         line = pv.lines_from_points(points)
         
-        self.canvas.add_mesh(line, line_width=3)
+        self.canvas.add_mesh(line, line_width=1)
         self.canvas.view_xy()
         self.canvas.show_bounds()
         self.canvas.reset_camera()
         
-        # self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
-        #                                          self.state.radar.n_ramps)
-        # raw_data = self.state.radar.get_radar_scan()
-        # self.state.processor.process_frame(raw_data, case=2)
-        # fig_range = self.state.processor.plot_range_fft(disp="NCI")
-        # plt = FigureCanvas(fig_range)
-        # self.layout.addWidget(plt)
         
     
     def draw_range_fft(self):
         self.canvas = QtInteractor(self)
         self.layout.addWidget(self.canvas.interactor)
         
-        x = np.linspace(0, 10, 100)
-        y = np.sin(x)
+        self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
+                                                 self.state.radar.n_ramps)
         
-        points = np.column_stack((x, y, np.zeros_like(x)))
+        raw_data = self.state.radar.get_radar_scan()
+        self.state.processor.process_frame(raw_data, case=1)
+        
+        n_sample = self.state.processor.n_sample
+        r_fft = self.state.processor.r_fft
+        
+        scale = 6
+        
+        r_fft_nci = np.mean(10*np.log10(np.abs(r_fft)**2), axis=0) * scale
+        
+        x = np.linspace(0, n_sample, num=n_sample)
+        
+        points = np.column_stack((x, r_fft_nci, np.zeros_like(x)))
         line = pv.lines_from_points(points)
         
-        self.canvas.add_mesh(line, line_width=3)
+        self.canvas.add_mesh(line, line_width=1)
+        
         self.canvas.view_xy()
-        self.canvas.show_bounds()
+        self.canvas.show_bounds(
+              grid = 'back',
+              location = 'outer',
+              color=self.state.plot_mode["Grid Color"],
+              xtitle = r"Number of Sample",
+              ytitle = "Power in dBfs",
+              )
+        
+        self.canvas.add_text(
+                "Range FFT",
+                position="upper_edge",
+                font_size=10,
+                color=self.state.plot_mode["Grid Color"],
+            )
+
         self.canvas.reset_camera()
         
-        # self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
-        #                                          self.state.radar.n_ramps)
-        # raw_data = self.state.radar.get_radar_scan()
-        # self.state.processor.process_frame(raw_data, case=2)
-        # fig_range = self.state.processor.plot_range_fft(disp="CFAR")
-        # plt = FigureCanvas(fig_range)
-        # self.layout.addWidget(plt)
+        self.canvas.set_background(color=self.state.plot_mode["Background Color"])
 
         
     
@@ -179,19 +190,48 @@ class PlotWidget(QWidget):
         self.canvas = QtInteractor(self)
         self.layout.addWidget(self.canvas.interactor)
         
-        x = np.linspace(0, 10, 100)
-        y = np.sin(x)
+        self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
+                                                 self.state.radar.n_ramps)
         
+        raw_data = self.state.radar.get_radar_scan()
+        self.state.processor.process_frame(raw_data, case=2)
+        
+        n_ramps = self.state.processor.n_ramps
+        x = np.linspace(0, n_ramps, num=n_ramps)
+        
+        scale = 4
+        
+        doppler_profile = np.max(self.state.processor.RD_map, axis=0)
+        
+        y = (10*np.log10(np.abs(doppler_profile)**2)) * scale
+    
         points = np.column_stack((x, y, np.zeros_like(x)))
         line = pv.lines_from_points(points)
+        self.canvas.add_mesh(line, line_width=1)
         
-        self.canvas.add_mesh(line, line_width=3)
+            
         self.canvas.view_xy()
+        
+        ax_ranges = [-self.state.radar.n_ramps//2,
+                     self.state.radar.n_ramps//2,
+                     -140, 0,
+                     0, 0
+                     ]
+        
+        
         self.canvas.show_bounds(
-              grid = 'back',
+              grid = 'front',
               location = 'outer',
               color=self.state.plot_mode["Grid Color"],
+              axes_ranges = ax_ranges,
               )
+        
+        self.canvas.add_text(
+                "Doppler FFT",
+                position="upper_edge",
+                font_size=10,
+                color=self.state.plot_mode["Grid Color"],
+            )
         
         self.canvas.reset_camera()
         self.canvas.disable_anti_aliasing()
@@ -201,14 +241,6 @@ class PlotWidget(QWidget):
         
         self.canvas.set_background(color=self.state.plot_mode["Background Color"])
                 
-        # self.state.processor.set_data_cube_shape(self.state.radar.n_sample, self.state.radar.n_ramps)
-        # raw_data = self.state.radar.get_radar_scan()
-        # self.state.processor.process_frame(raw_data, case=2)
-        # fig_doppler = self.state.processor.plot_doppler_fft()
-        # plt = FigureCanvas(fig_doppler)
-        # self.layout.addWidget(plt)
-
-        
 
     def draw_RD_map(self):
         self.canvas = QtInteractor(self)

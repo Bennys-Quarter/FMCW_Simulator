@@ -116,8 +116,8 @@ class MainWindow(QMainWindow):
         
         
     def add_plots(self):
-        # TODO: check settings first before selecting new_entry
-        # Delete all widgets from plot frame
+        # TODO: check settings first before selecting new_entry 
+        # Delete all widgets from plot frame 
         layout = self.canvas_frame.layout()
         
         while layout.count():
@@ -144,18 +144,18 @@ class MainWindow(QMainWindow):
     def set_settings_enabeld(self, enable: bool):
         for w in self.setting_widgets:
             w.setEnabled(enable)
-    
-    
+
+
     def on_apply_clicked(self):
         setting = {name:widget.text() for name, widget in self.param_settings.items()}
         self.state.fmcw_settings = setting
-    
-    
+
+
     def on_show_clicked(self):
         self.add_plots()
         if self.canvas == None: return
         self.canvas.update_plots()
-    
+
 
     def on_chirp_param_changed(self):
         keys = self.state.fmcw_settings.keys()

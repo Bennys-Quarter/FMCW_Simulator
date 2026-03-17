@@ -310,7 +310,7 @@ class FMCWSignalProcessor():
 
         doppler_axis = np.arange(-self.n_ramps//2 , self.n_ramps//2, 1) 
         range_axis = np.arange(0, self.n_sample//2 , 1) 
-        
+
         if disp == "3D":
             fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
             X, Y = np.meshgrid(doppler_axis, range_axis) 
@@ -321,7 +321,7 @@ class FMCWSignalProcessor():
             ax = fig.add_subplot(111)
             im = ax.imshow(rdm, extent=(doppler_axis.min(), doppler_axis.max(), range_axis.min(), range_axis.max()), origin='lower', cmap='viridis')
             fig.colorbar(im, shrink=0.4, aspect=25 ,pad=0.05 , label="Power in dB")
-            
+
         elif disp == "CFAR":
             fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
             th_cfar = self.ca_cfar_2d(rdm,

@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import constants 
+from scipy.signal import cheby1, filtfilt
 
 
 class FMCWRadar:
@@ -174,6 +175,60 @@ class FMCWRadar:
         return data
     
     
+    def calculate_IF_signal(self):
+        """
+        Calculates the normalized mixed signal raw data after low pass filtering 
+        for all targets in the scene
+
+        Returns
+        -------
+        
+        data 
+        """
+
+        fs = self.f_s       
+        t_int = self.t_c
+        t = np.arange(0, t_int , 1/fs)
+        
+        # Transmit signal
+        s_tx = np.exp(1j * 2*np.pi * (self.f_start*t + 0.5*self.slope*t**2))
+        
+        # Chebyshev filter parameters
+        order = 6                        # filter order
+        ripple = 1                       # passband ripple (dB)
+        cutoff = (fs/2) - 1 * 1e6        # cutoff frequency
+        
+        # Design filter
+        b, a = cheby1(order, ripple, cutoff/(fs/2), btype='low')
+        
+        data = np.zeros((1, self.n_sample))
+        s_rx = np.zeros((1, self.n_sample), dtype=complex)
+        
+        targets = self.target_params['targets']
+        
+        if targets:
+            for target in targets:
+                
+                # Target
+                r = target["range_m"]
+                sigma = target["rcs_dBsm"]
+                
+                tau = 2 * r / self.c
+                
+                t_del = t - tau
+                
+                A = np.sqrt(sigma) / (r**2)
+                
+                s_rx[0] += A * np.exp(1j * 2*np.pi * (self.f_start*t_del + 0.5*self.slope*t_del**2)) 
+        
+        # Mixing (THIS produces IF)
+        data = s_tx * np.conj(s_rx[0])
+        data = data / np.max(np.abs(data))    # Normalize 
+        data = filtfilt(b, a, data)
+        
+        return data
+    
+    
     def attenutation(self, r, rcs) -> float:
         """
         Returns attenuation in dB relative to reference_distance.
@@ -233,7 +288,7 @@ class FMCWRadar:
         ax.set_in_layout(False)
         
         return fig
-
+    
 
     def plot_raw_data(self, raw_data):
         """ Plot the time data sample values of all chirps"""
@@ -249,13 +304,16 @@ class FMCWRadar:
         ax1.set_xlabel('Time (μs)')
         ax1.set_ylabel('Amplitude')
 
+        return fig1
+    
+    
+    def plot_mixed_signal(self):
         fig2 = plt.figure(2)
         ax2 = fig2.add_subplot()
         
-        for i in range(self.n_ramps):
-            ax2.plot(raw_data[self.n_sample * i : self.n_sample + self.n_sample * i])
-
-        ax2.set_xlabel('Sample')
-        ax2.set_ylabel('Amplitude')
-
-        return fig1, fig2
+        data = self.calculate_IF_signal()
+        
+        ax2.plot(np.real(data)) 
+        ax2.grid("on")
+                
+        return fig2
