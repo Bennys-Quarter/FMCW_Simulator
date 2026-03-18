@@ -63,10 +63,11 @@ class PlotWidget(QWidget):
         self.canvas = QtInteractor(self)
         self.layout.addWidget(self.canvas.interactor)
         
-        raw_data = self.state.radar.get_radar_scan()
         
         t = self.state.radar.t
         n_sample = self.state.radar.n_sample
+        
+        chirp = self.state.radar.generate_chirp(t)
         
         n_chirps = 4
         
@@ -76,7 +77,7 @@ class PlotWidget(QWidget):
         lines = []
         for i in range(n_chirps):
             x = t[n_sample * i : n_sample + n_sample * i]
-            y = raw_data[n_sample * i : n_sample + n_sample * i] 
+            y = chirp[n_sample * i : n_sample + n_sample * i] 
         
             points = np.column_stack((x, y, np.zeros_like(x)))
             lines.append(pv.lines_from_points(points))
@@ -93,7 +94,7 @@ class PlotWidget(QWidget):
                 color=self.state.plot_mode["Grid Color"],
             )
         
-        self.canvas.set_scale(xscale=1e6, yscale=4, zscale=1)
+        self.canvas.set_scale(xscale=1e6, yscale=20, zscale=1)
         
         self.canvas.show_bounds(
               grid = 'back',
@@ -107,8 +108,6 @@ class PlotWidget(QWidget):
               xtitle = "Time in mu s",
               ytitle = "Amplitude in W",
               )
-        
-
         
         self.canvas.view_xy()
         self.canvas.reset_camera()
@@ -165,6 +164,7 @@ class PlotWidget(QWidget):
         
         self.canvas.view_xy()
         self.canvas.reset_camera()
+        self.canvas.interactor.SetInteractorStyle(None)
         
         self.canvas.set_background(color=self.state.plot_mode["Background Color"])
         
@@ -218,6 +218,7 @@ class PlotWidget(QWidget):
         
         self.canvas.view_xy()
         self.canvas.reset_camera()
+        self.canvas.interactor.SetInteractorStyle(None)
         
         self.canvas.set_background(color=self.state.plot_mode["Background Color"])
 
