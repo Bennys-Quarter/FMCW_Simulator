@@ -67,7 +67,7 @@ class TargetList(QScrollArea):
 
     def on_new_target(self, idx, v, d, rcs):
         new_target = {
-                "- id": idx,
+                "id": idx,
                 "range_m": d, 
                 "velocity_mps": v,
                 "rcs_dBsm": rcs
@@ -75,4 +75,3 @@ class TargetList(QScrollArea):
         targets = self.state.radar.target_params
         targets["targets"].append(new_target)
         self.state.radar.target_params = targets
-        self.state.radar.set_target_parameters(targets)

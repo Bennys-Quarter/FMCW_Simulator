@@ -47,7 +47,7 @@ class PopupTargetSetting(QWidget):
         params = self.state.radar.target_params
         
         for t in params["targets"]:
-            if int(t["- id"]) == self.idx:
+            if int(t["id"]) == self.idx:
                 t["velocity_mps"] = v
                 t["range_m"] = d
                 self.ref_obj.d = d
@@ -57,9 +57,6 @@ class PopupTargetSetting(QWidget):
         
         
         self.state.radar.target_params = params
-        self.state.radar.clear_target_parameters()
-        self.state.radar.set_target_parameters(params)
-        self.state.popups.pop(self)
         self.deleteLater()
     
     
@@ -73,7 +70,7 @@ class PopupTargetSetting(QWidget):
         params = self.state.radar.target_params
         
         for t in params["targets"]:
-            if int(t["- id"]) == self.idx:
+            if int(t["id"]) == self.idx:
                 t["velocity_mps"] = v
                 t["range_m"] = d
                 self.ref_obj.d = d
@@ -82,8 +79,6 @@ class PopupTargetSetting(QWidget):
                 break
         
         self.state.radar.target_params = params
-        self.state.radar.clear_target_parameters()
-        self.state.radar.set_target_parameters(params)
         
         
         

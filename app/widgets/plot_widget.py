@@ -68,17 +68,15 @@ class PlotWidget(QWidget):
         t = self.state.radar.t
         n_sample = self.state.radar.n_sample
         
-        scale = 3
         n_chirps = 4
         
         x_min = t[0]
-        x_max = t[n_sample * n_chirps : n_sample + n_sample * n_chirps]*1e6
-        x_max = x_max[-1]
+        x_max = self.state.radar.t_pri * n_chirps * 1e6
         
         lines = []
         for i in range(n_chirps):
-            x = t[n_sample * i : n_sample + n_sample * i]*1e6
-            y = raw_data[n_sample * i : n_sample + n_sample * i]*1e3 * scale
+            x = t[n_sample * i : n_sample + n_sample * i]
+            y = raw_data[n_sample * i : n_sample + n_sample * i] 
         
             points = np.column_stack((x, y, np.zeros_like(x)))
             lines.append(pv.lines_from_points(points))
@@ -87,36 +85,35 @@ class PlotWidget(QWidget):
         self.canvas.add_mesh(lines[1], color="blue", line_width=3)
         self.canvas.add_mesh(lines[2], color="yellow", line_width=3)
         self.canvas.add_mesh(lines[3], color="green", line_width=3)
-        self.canvas.view_xy()
+        
+        self.canvas.add_text(
+                "First 4 Transmitted Chirps",
+                position="upper_edge",
+                font_size=10,
+                color=self.state.plot_mode["Grid Color"],
+            )
+        
+        self.canvas.set_scale(xscale=1e6, yscale=4, zscale=1)
+        
         self.canvas.show_bounds(
               grid = 'back',
               location = 'outer',
               color=self.state.plot_mode["Grid Color"],
               axes_ranges = [
                   x_min, x_max,
-                  -1, 1,
+                  -1*np.sqrt(2), 1*np.sqrt(2),
                   0, 0
                   ],
-              bounds = [
-                  x_min, x_max,
-                  -1, 1,
-                  0, 0
-                  ],
-              xtitle = r"Time in \mu s",
+              xtitle = "Time in mu s",
               ytitle = "Amplitude in W",
               )
         
-        self.canvas.add_text(
-                "Transmitted Chirps",
-                position="upper_edge",
-                font_size=10,
-                color=self.state.plot_mode["Grid Color"],
-            )
+
         
+        self.canvas.view_xy()
         self.canvas.reset_camera()
-        self.canvas.disable_anti_aliasing()
-        self.canvas.enable_parallel_projection()
-        self.canvas.camera_position = 'xy'
+        #self.canvas.disable_anti_aliasing()
+        #self.canvas.enable_parallel_projection()
         self.canvas.interactor.SetInteractorStyle(None)
         
         self.canvas.set_background(color=self.state.plot_mode["Background Color"])
@@ -127,17 +124,49 @@ class PlotWidget(QWidget):
         self.canvas = QtInteractor(self)
         self.layout.addWidget(self.canvas.interactor)
         
-        x = np.linspace(0, 10, 100)
-        y = np.sin(x)
+        n_sample = self.state.radar.n_sample
+        
+        x = np.linspace(0, n_sample, n_sample)
+        y = self.state.radar.calculate_IF_signal()
+        
+        y = np.real(y)
         
         points = np.column_stack((x, y, np.zeros_like(x)))
         line = pv.lines_from_points(points)
         
-        self.canvas.add_mesh(line, line_width=1)
+        self.canvas.add_mesh(line, line_width=2)
+        
+
+        
+        ax_ranges = [0,
+                     n_sample,
+                     -1, 1,
+                     0, 0
+                     ]
+        
+
+        
+        self.canvas.add_text(
+                "Normalized IT Signal",
+                position="upper_edge",
+                font_size=10,
+                color=self.state.plot_mode["Grid Color"],
+            )
+        
+        # Set axis ratio
+        self.canvas.set_scale(xscale=2, yscale=n_sample/2, zscale=1)
+        
+        self.canvas.show_bounds(
+            color=self.state.plot_mode["Grid Color"],
+            axes_ranges = ax_ranges,
+            xtitle = r"Sample",
+            ytitle = "Amplitude",
+            )
+        
         self.canvas.view_xy()
-        self.canvas.show_bounds()
         self.canvas.reset_camera()
         
+        self.canvas.set_background(color=self.state.plot_mode["Background Color"])
         
     
     def draw_range_fft(self):
@@ -153,25 +182,14 @@ class PlotWidget(QWidget):
         n_sample = self.state.processor.n_sample
         r_fft = self.state.processor.r_fft
         
-        scale = 6
-        
-        r_fft_nci = np.mean(10*np.log10(np.abs(r_fft)**2), axis=0) * scale
+        r_fft_nci = np.mean(10*np.log10(np.abs(r_fft)**2), axis=0) 
         
         x = np.linspace(0, n_sample, num=n_sample)
         
         points = np.column_stack((x, r_fft_nci, np.zeros_like(x)))
         line = pv.lines_from_points(points)
         
-        self.canvas.add_mesh(line, line_width=1)
-        
-        self.canvas.view_xy()
-        self.canvas.show_bounds(
-              grid = 'back',
-              location = 'outer',
-              color=self.state.plot_mode["Grid Color"],
-              xtitle = r"Number of Sample",
-              ytitle = "Power in dBfs",
-              )
+        self.canvas.add_mesh(line, line_width=2)
         
         self.canvas.add_text(
                 "Range FFT",
@@ -179,7 +197,26 @@ class PlotWidget(QWidget):
                 font_size=10,
                 color=self.state.plot_mode["Grid Color"],
             )
-
+        
+        # Set axis ratio
+        self.canvas.set_scale(xscale=0.9, yscale=2.5, zscale=1)
+        
+        ax_ranges = [0,
+                     n_sample,
+                     -140, 0,
+                     0, 0
+                     ]
+        
+        self.canvas.show_bounds(
+              #grid = 'back',
+              #location = 'outer',
+              color=self.state.plot_mode["Grid Color"],
+              axes_ranges = ax_ranges,
+              xtitle = "Number of Sample",
+              ytitle = "Power in dBfs",
+              )
+        
+        self.canvas.view_xy()
         self.canvas.reset_camera()
         
         self.canvas.set_background(color=self.state.plot_mode["Background Color"])
@@ -207,24 +244,7 @@ class PlotWidget(QWidget):
     
         points = np.column_stack((x, y, np.zeros_like(x)))
         line = pv.lines_from_points(points)
-        self.canvas.add_mesh(line, line_width=1)
-        
-            
-        self.canvas.view_xy()
-        
-        ax_ranges = [-self.state.radar.n_ramps//2,
-                     self.state.radar.n_ramps//2,
-                     -140, 0,
-                     0, 0
-                     ]
-        
-        
-        self.canvas.show_bounds(
-              grid = 'front',
-              location = 'outer',
-              color=self.state.plot_mode["Grid Color"],
-              axes_ranges = ax_ranges,
-              )
+        self.canvas.add_mesh(line, line_width=2)
         
         self.canvas.add_text(
                 "Doppler FFT",
@@ -233,9 +253,27 @@ class PlotWidget(QWidget):
                 color=self.state.plot_mode["Grid Color"],
             )
         
+        self.canvas.set_scale(xscale=1, yscale=0.6, zscale=1)
+        
+        ax_ranges = [-n_ramps//2,
+                     n_ramps//2,
+                     -140, 0,
+                     0, 0
+                     ]
+        
+        self.canvas.show_bounds(
+              #grid = 'front',
+              #location = 'outer',
+              color=self.state.plot_mode["Grid Color"],
+              axes_ranges = ax_ranges,
+              xtitle = "Number of Sample",
+              ytitle = "Power in dBfs",
+              )
+        
+        self.canvas.view_xy()
         self.canvas.reset_camera()
-        self.canvas.disable_anti_aliasing()
-        self.canvas.enable_parallel_projection()
+        #self.canvas.disable_anti_aliasing()
+        #self.canvas.enable_parallel_projection()
         self.canvas.camera_position = 'xy'
         self.canvas.interactor.SetInteractorStyle(None)
         

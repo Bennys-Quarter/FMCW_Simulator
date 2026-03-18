@@ -205,13 +205,13 @@ class FMCWRadar:
         s_rx = np.zeros((1, self.n_sample), dtype=complex)
         
         targets = self.target_params['targets']
-        
+        print(targets)
         if targets:
             for target in targets:
                 
                 # Target
                 r = target["range_m"]
-                sigma = target["rcs_dBsm"]
+                sigma = 10**(target["rcs_dBsm"]/10)
                 
                 tau = 2 * r / self.c
                 
