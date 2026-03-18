@@ -59,7 +59,7 @@ class FMCWRadar:
         self.slope = self.f_BW / self.t_c
 
         # Performance parameter
-        self.R_max = self.c/(2*self.f_BW) * self.n_sample
+        self.R_max = (self.c/(2*self.slope)) * (self.f_s/2)
         self.V_max = (self.wavelength/(4 * self.t_pri))
 
 
