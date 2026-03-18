@@ -152,8 +152,17 @@ class MainWindow(QMainWindow):
 
 
     def on_show_clicked(self):
-        self.add_plots()
-        if self.canvas == None: return
+        layout = self.canvas_frame.layout()
+        
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
+        
+        new_entry = PlotFormatSingle()
+        self.canvas = new_entry.findChild(PlotWidget, "plotWidget")
+        self.canvas.layout = layout
         self.canvas.update_plots()
 
 
@@ -167,7 +176,6 @@ class MainWindow(QMainWindow):
         self.add_plots()
         self.set_settings_enabeld(False)
         if self.canvas == None: return
-        
         for i, cnv in enumerate(self.canvas):
             cnv.prepeare_plots(option = self.state.plot_mode["Window"], plt_idx=i)
         

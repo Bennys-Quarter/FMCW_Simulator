@@ -245,6 +245,8 @@ class PlotWidget(QWidget):
     def draw_RD_map(self):
         self.canvas = QtInteractor(self)
         
+        self.layout.addWidget(self.canvas.interactor)
+        
         self.state.processor.set_data_cube_shape(self.state.radar.n_sample, 
                                                  self.state.radar.n_ramps)
         
@@ -424,7 +426,7 @@ class PlotWidget(QWidget):
         Draw radar plots depending on the settings in the plot window
         
         option:
-            - RDM : Plots a single range doppler map
+            - RD-Map : Plots a single range doppler map
             - Signals : Plot a the signal result after each processing step 
         Returns
         -------
@@ -436,10 +438,13 @@ class PlotWidget(QWidget):
         
         self.layout = QVBoxLayout(self)
         
-        plt = self.plots[option][plt_idx]
-
-        plt()
-        #self.layout.addWidget(self.canvas.interactor)
+        if option == "Signals":
+            plt = self.plots[option][plt_idx]
+            plt()
+        elif option == "RD-Map":
+            plt = self.plots[option][plt_idx]
+            plt()
+            #
 
 
     def on_stop_triggered(self):
