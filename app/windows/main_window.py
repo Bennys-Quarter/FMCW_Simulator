@@ -2,7 +2,7 @@
 from PySide6.QtWidgets import (QApplication, QMainWindow, QLineEdit, 
                                QPushButton, QWidget, QGraphicsView, QMenu, 
                                QFrame, QVBoxLayout, QPushButton, QHBoxLayout,
-                               QComboBox, QRadioButton, QSpinBox)
+                               QComboBox, QRadioButton, QSpinBox, QCheckBox)
 from PySide6.QtGui import QAction
 from app.ui_compiled.ui_main_window import Ui_MainWindow
 
@@ -63,6 +63,7 @@ class MainWindow(QMainWindow):
         self.menu_window = self.findChild(QMenu, "menuPlots")
         self.main_frame = self.findChild(QFrame, "mainFrame")
         self.plot_layout_selector = self.findChild(QComboBox, "plotLayoutSelector")
+        self.target_dt_selector = self.findChild(QComboBox, "setTargetDetection")
         self.rd_btn_2D = self.findChild(QRadioButton, "radioButton_2D")
         self.rd_btn_3D = self.findChild(QRadioButton, "radioButton_3D")
         self.rd_btn_black = self.findChild(QRadioButton, "radioButton_black")
@@ -71,6 +72,8 @@ class MainWindow(QMainWindow):
         self.rd_btn_physical = self.findChild(QRadioButton, "radioButton_physical")
         self.sp_box_min_clim = self.findChild(QSpinBox, "spinMinClimBox")
         self.sp_box_max_clim = self.findChild(QSpinBox, "spinMaxClimBox")
+        self.ch_box_target_dt = self.findChild(QCheckBox, "checkBoxTargetDetection")
+        
         
         self.plot_fullscreen_action = self.findChild(QAction, "actionFullscreen")
         
@@ -107,6 +110,9 @@ class MainWindow(QMainWindow):
         self.sp_box_max_clim.valueChanged.connect(self.on_plot_setting_changed)
         self.sp_box_min_clim.valueChanged.connect(self.on_plot_setting_changed)
         self.plot_layout_selector.currentIndexChanged.connect(self.on_plot_setting_changed)
+        self.target_dt_selector.currentIndexChanged.connect(self.on_target_detection_changed)
+        self.ch_box_target_dt.checkStateChanged.connect(self.on_target_detection_checked)
+        
         
         self.init_settings()
     
@@ -164,6 +170,24 @@ class MainWindow(QMainWindow):
         self.canvas = new_entry.findChild(PlotWidget, "plotWidget")
         self.canvas.layout = layout
         self.canvas.update_plots()
+        
+    
+    def on_target_detection_checked(self):
+        if self.ch_box_target_dt.isChecked():
+            self.state.set_flag("TargetDetection", True)
+        else:
+            self.state.set_flag("TargetDetection", False)
+            
+    
+    def on_target_detection_changed(self):
+        text = self.target_dt_selector.currentText()
+        
+        if text == "Single Threshold":
+            self.state.set_processing_setting("TargetDetection", "threshold")
+        elif text == "CA-CFAR":
+            self.state.set_processing_setting("TargetDetection", "CFAR")
+        
+        
 
 
     def on_chirp_param_changed(self):

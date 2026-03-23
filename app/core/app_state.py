@@ -28,6 +28,11 @@ class AppState(QObject):
         self.radar = FMCWRadar(chirp_param, target_param)
         self.processor = FMCWSignalProcessor()
         
+        # App - Flags
+        self.falgs = {
+            "TargetDetection" : False
+            }
+        
         # FMCW - Settings
         self._fmcw_settings = {
         "f_start" : self.radar.f_start,
@@ -43,6 +48,18 @@ class AppState(QObject):
         "r_max" : self.radar.R_max,
         "v_max" : self.radar.V_max
         }
+        
+        # Processing - Settings
+        self._processing_settings = {
+            "TargetDetection": {
+                "func" : self.processor.target_detection,
+                "setting": "CFAR"
+                },
+            "DoA" : {
+                "func" : self.processor.calc_doa,
+                "setting": "AngleFFT"
+                }
+            }
         
         # Plot - Settings
         self.plot_mode = {
@@ -63,6 +80,7 @@ class AppState(QObject):
         #Windows
         self.popups = []
         
+        
     def generate_target_id(self):
         idx=0
         
@@ -80,12 +98,46 @@ class AppState(QObject):
     def remove_target_id(self, idx:int):
         self.t_ids.remove(idx)
     
+    
+    def set_flag(self, name, value=True):
+        self.flags[name] = value
+
+
+    def get_flag(self, name):
+        return self.flags.get(name, False)
         
+    
     # ---- Properties ----
+    
+    def set_processing_setting(self, name, setting):
+        if name not in self._processing_settings:
+            raise KeyError(f"{name} not found")
+    
+        current = self._processing_settings[name]["setting"]
+    
+        if current != setting:
+            new_settings = dict(self._processing_settings)
+            new_settings[name] = dict(new_settings[name])  # copy inner dict
+            new_settings[name]["setting"] = setting
+    
+            self.processing_settings = new_settings  # triggers setter
+    
+    
+    @property
+    def processing_settings(self):
+        return self._processing_settings
+    
+    
+    @processing_settings.setter
+    def processing_settings(self, value):
+        if value != self._processing_settings:
+            self._processing_settings = value
+    
     
     @property
     def fmcw_settings(self):
         return self._fmcw_settings
+    
     
     @fmcw_settings.setter
     def fmcw_settings(self, value):

@@ -78,7 +78,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>4</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="tab">
            <attribute name="title">
@@ -595,7 +595,7 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_6">
                 <item>
-                 <widget class="QCheckBox" name="checkBox">
+                 <widget class="QCheckBox" name="checkBoxTargetDetection">
                   <property name="font">
                    <font>
                     <bold>true</bold>
@@ -639,6 +639,9 @@
                 </item>
                 <item row="0" column="1">
                  <widget class="QComboBox" name="setTargetDetection">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
                   <item>
                    <property name="text">
                     <string>Single Threshold</string>
